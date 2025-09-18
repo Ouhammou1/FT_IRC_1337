@@ -16,7 +16,12 @@ std::string Client::getUsername() const
 {
         return username;
 }
-Client::Client(int fd ,std::string nickname , std::string username):fd(fd) , nickname(nickname) , username(username)
+std::string     Client::getRealname() const
+{
+    return realname;
+}
+
+Client::Client(int fd ,std::string nickname , std::string username ,std::string realname):fd(fd) , nickname(nickname) , username(username) , realname(realname)
 {
 
 }
@@ -35,9 +40,10 @@ Client& Client::operator=(const Client &other)
 {
     if(this != &other)
     {
-        fd = other.fd;
+        // fd = other.fd;
         nickname = other.nickname;
         username = other.username;
+        realname = other.realname;
     }
     return *this;
 }

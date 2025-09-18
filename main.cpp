@@ -1,8 +1,8 @@
 #include <iostream>
-#include "Client.hpp"
+// #include "Client.hpp"
 #include "Server.hpp"
-
 #include <stdexcept>
+
 
 bool PortNumber(std::string &str)
 {
@@ -18,16 +18,21 @@ bool PortNumber(std::string &str)
 
 int main(int ac , char **av)
 {
+
     if(ac != 3)
     {
         std::cout <<  "Invalid argument. Usage: " <<av[0] << " <PORT> <PASSWORD>"  << std::endl;
         return 0;
     }
+    Server server;
     try
     {
         std::string str = av[1];
         if(!PortNumber(str))
             throw std::invalid_argument("Port must be a numeric value");
+        server.SetPort(str);
+        server.StartServer();
+
     }
     catch(const std::exception& e)
     {
