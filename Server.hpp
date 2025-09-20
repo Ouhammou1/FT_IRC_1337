@@ -23,8 +23,12 @@ public:
     void    StartServer();
     void    SetPort(std::string& str);
 
+    int    GetPort();
+    int    GetFd();
 
 
 
 };
+
+
 
