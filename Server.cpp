@@ -27,3 +27,20 @@ void    Server::SetPort(std::string& str)
     // std::cout << "Port " << port << std::endl;
 }
 
+
+void    Server::SetPassword(std::string password)
+{
+        this->password = password;
+}
+std::string   Server::GetPassword()
+{
+    return password;
+}
+
+bool Server::signal = 0;
+void     Server::SignalHandel(int signal)
+{
+    (void) signal;
+    std::cout << "Singal Received . " << std::endl;
+    Server::signal = true;
+}

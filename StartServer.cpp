@@ -1,8 +1,119 @@
 #include "Server.hpp"
 // #include "Client.hpp"
 
+void    Server::CreateSocket()
+{
+
+    struct sockaddr_in address;
+    struct pollfd NewPoll;
+
+    address.sin_family =AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port=htons(GetPort());
+
+    // printf("address.sin_port = %d \n" , address.sin_port);
+
+    fd = socket(AF_INET , SOCK_STREAM , 0);
+    if(fd == -1)
+        throw std::runtime_error("Failed to create socket");
+    
+    int option = 1;
+    if(setsockopt(fd , SOL_SOCKET , SO_REUSEADDR , &option , sizeof(option)) < 0)
+    {
+        close(fd);
+        throw std::runtime_error("Failed to set SO_REUSEADDR ");
+    }
+    if(bind(fd ,  (struct sockaddr*)&address , sizeof(address)) < 0)
+    {
+        close(fd);
+        throw std::runtime_error("Failed to bind socket ");
+    }
+    if (listen(fd , SOMAXCONN) < 0)
+    {
+        close(fd);
+        throw std::runtime_error("Failed to listen");
+    }
+
+    NewPoll.fd= fd;
+    NewPoll.events = POLLIN;
+    NewPoll.revents = 0;
+    fds.push_back(NewPoll);
+}
+
+
+void    Server::AcceptNewClient()
+{
+    struct  sockaddr_in clientAddr;
+
+    socklen_t   clientlen = sizeof(clientAddr);
+
+    int clientFD = accept(fd , (struct sockaddr*)&clientAddr , &clientlen);
+    if(clientFD == -1)
+    {
+        perror("accept() failed");
+        return ;
+    }
+    std::cout << "New client connected: fd = " << clientFD << std::endl;
+
+    pollfd fdd;
+
+    fdd.fd = clientFD;
+    fdd.events = POLLIN;
+    fdd.revents = 0;
+    fds.push_back(fdd);
+}
+
+void    Server::ReceiveNewData(int clientFd)
+{
+    char buffer[1024];
+    memset(buffer , 0 , sizeof(buffer));
+
+    ssize_t bytRead = recv(clientFd , buffer , sizeof(buffer) -1 ,  0) ;
+    if (bytRead <= 0)
+    {
+        if(bytRead == 0)
+            std::cout << "Client " << clientFd << " disconnected." << std::endl;
+        else
+            perror("recv() failed ");
+        
+        for (size_t i = 0; i < fds.size(); i++)
+        {
+            if(fds[i].fd == clientFd)
+            {
+                fds.erase(fds.begin() +i);
+                break;
+            }
+        }
+    }
+    else
+    {
+        std::cout << "Receied from " << clientFd  << ": " << buffer << std::endl; 
+        send(clientFd , buffer , bytRead, 0);
+    }
+}
+
 void    Server::StartServer()
 {
-    port = 155;
-    fd= -1;
+    Server::CreateSocket();
+
+
+    while (Server::signal == false)
+    {
+        if ((poll(&fds[0] , fds.size() , -1 ) == -1 ) && Server::signal == false)
+        {
+            throw std::runtime_error("Poll() Failed ");
+        }
+        
+        for (size_t i = 0; i < fds.size() ; i++)
+        {
+            if(fds[i].events & POLLIN)
+            {
+                if(fds[i].fd == fd)
+                    AcceptNewClient();
+                else
+                    ReceiveNewData(fds[i].fd);
+            }
+        }        
+    }
+    
 }

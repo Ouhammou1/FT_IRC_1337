@@ -28,12 +28,19 @@ int main(int ac , char **av)
     Server server;
     try
     {
+
         std::string str = av[1];
+        std::string password = av[2];
+
         if(!PortNumber(str))
             throw std::invalid_argument("Port must be a numeric value");
+        
+        // signal(SIGINT , Server::SignalHandel);
+        signal(SIGQUIT , Server::SignalHandel);
         server.SetPort(str);
-
+        server.SetPassword(password);
         server.StartServer();
+
 
     }
     catch(const std::exception& e)
