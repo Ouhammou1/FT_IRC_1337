@@ -33,6 +33,11 @@ void    Server::CreateSocket()
         close(fd);
         throw std::runtime_error("Failed to listen");
     }
+    // if(fcntl(fd , F_SETFL , O_NONBLOCK) < 0)
+    // {
+    //     close(fd);
+    //     throw std::runtime_error("failed to set non-blocking");
+    // }
 
     NewPoll.fd= fd;
     NewPoll.events = POLLIN;
@@ -44,7 +49,6 @@ void    Server::CreateSocket()
 void    Server::AcceptNewClient()
 {
     struct  sockaddr_in clientAddr;
-
     socklen_t   clientlen = sizeof(clientAddr);
 
     int clientFD = accept(fd , (struct sockaddr*)&clientAddr , &clientlen);
@@ -53,6 +57,13 @@ void    Server::AcceptNewClient()
         perror("accept() failed");
         return ;
     }
+    // if (fcntl(clientFD  , F_SETFL , O_NONBLOCK ) < 0)
+    // {
+    //     perror("fcntl() failed");
+    //     close(clientFD);
+    //     return;
+    // }
+    
     std::cout << "New client connected: fd = " << clientFD << std::endl;
 
     pollfd fdd;
@@ -71,6 +82,7 @@ void    Server::ReceiveNewData(int clientFd)
     ssize_t bytRead = recv(clientFd , buffer , sizeof(buffer) -1 ,  0) ;
     if (bytRead <= 0)
     {
+    std::cout << "bytRead =   -------------------------------> " << bytRead << std::endl;
         if(bytRead == 0)
             std::cout << "Client " << clientFd << " disconnected." << std::endl;
         else
@@ -80,13 +92,23 @@ void    Server::ReceiveNewData(int clientFd)
         {
             if(fds[i].fd == clientFd)
             {
-                fds.erase(fds.begin() +i);
+                fds.erase(fds.begin() + i);
                 break;
             }
         }
+        for (size_t i = 0; i < clients.size(); i++)
+        {
+            if(clients[i].getFd() == clientFd)
+            {
+                clients.erase(clients.begin() + i);
+                break;
+            }
+        }
+        close(clientFd);
     }
     else
     {
+        buffer[bytRead] ='\0';
         std::cout << "Receied from " << clientFd  << ": " << buffer << std::endl; 
         send(clientFd , buffer , bytRead, 0);
     }
@@ -99,14 +121,13 @@ void    Server::StartServer()
 
     while (Server::signal == false)
     {
-        if ((poll(&fds[0] , fds.size() , -1 ) == -1 ) && Server::signal == false)
-        {
+        int ret = poll(&fds[0] , fds.size() , -1 );
+        if (ret == -1 && Server::signal == false)
             throw std::runtime_error("Poll() Failed ");
-        }
-        
+
         for (size_t i = 0; i < fds.size() ; i++)
         {
-            if(fds[i].events & POLLIN)
+            if(fds[i].revents & POLLIN)
             {
                 if(fds[i].fd == fd)
                     AcceptNewClient();
@@ -116,4 +137,4 @@ void    Server::StartServer()
         }        
     }
     
-}
+} 

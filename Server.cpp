@@ -44,3 +44,18 @@ void     Server::SignalHandel(int signal)
     std::cout << "Singal Received . " << std::endl;
     Server::signal = true;
 }
+
+
+void      Server::CloseServer()
+{
+    for (size_t i = 0; i < fds.size(); i++)
+    {
+        if (fds[i].fd != fd && fds[i].fd != -1)
+        {
+            close(fds[i].fd);
+        }
+    }
+    fds.clear();
+    clients.clear();
+    std::cout << "Server closed successfully."  << std::endl;
+}

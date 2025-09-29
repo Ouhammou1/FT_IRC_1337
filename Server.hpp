@@ -40,6 +40,7 @@ public:
 
     void     AcceptNewClient();
     void     ReceiveNewData(int clientFd);
+    void     CloseServer();
 };
 
 
