@@ -24,7 +24,7 @@ public:
 
 
 
-    void    desplay(std::string nameObj);
+    void    display(std::string nameObj);
 };
 
 

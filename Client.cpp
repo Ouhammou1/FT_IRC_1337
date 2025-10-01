@@ -52,7 +52,7 @@ Client::~Client()
 {
 }
 
-void    Client::desplay(std::string nameObj)
+void    Client::display(std::string nameObj)
 {
     std::cout << "------------  " << nameObj << "  -------------" << std::endl; 
     std::cout << "fd  = " << fd << std::endl;

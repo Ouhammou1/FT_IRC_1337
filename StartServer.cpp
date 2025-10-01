@@ -82,7 +82,7 @@ void    Server::ReceiveNewData(int clientFd)
     ssize_t bytRead = recv(clientFd , buffer , sizeof(buffer) -1 ,  0) ;
     if (bytRead <= 0)
     {
-    std::cout << "bytRead =   -------------------------------> " << bytRead << std::endl;
+        std::cout << "bytRead =   -------------------------------> " << bytRead << std::endl;
         if(bytRead == 0)
             std::cout << "Client " << clientFd << " disconnected." << std::endl;
         else
@@ -110,7 +110,23 @@ void    Server::ReceiveNewData(int clientFd)
     {
         buffer[bytRead] ='\0';
         std::cout << "Receied from " << clientFd  << ": " << buffer << std::endl; 
-        send(clientFd , buffer , bytRead, 0);
+
+
+        std::string data(buffer);
+        std::istringstream stream(data);
+        std::string line ;
+
+        while (std::getline(stream , line))
+        {
+            if(!line.empty() && line.back() == '\r')
+                line.pop_back();
+            // std::cout  << "Line :" << line << std::endl;
+            
+            if(!line.empty())
+                ParseMessage(clientFd , line);
+        }
+        
+        // send(clientFd , buffer , bytRead, 0);
     }
 }
 

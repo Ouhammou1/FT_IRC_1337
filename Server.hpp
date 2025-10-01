@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <poll.h>
+#include <sstream>
 
 
 class Server
@@ -41,6 +42,7 @@ public:
     void     AcceptNewClient();
     void     ReceiveNewData(int clientFd);
     void     CloseServer();
+    void     ParseMessage(int clientFd ,std::string  line);
 };
 
 
