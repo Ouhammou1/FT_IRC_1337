@@ -33,11 +33,11 @@ void    Server::CreateSocket()
         close(fd);
         throw std::runtime_error("Failed to listen");
     }
-    // if(fcntl(fd , F_SETFL , O_NONBLOCK) < 0)
-    // {
-    //     close(fd);
-    //     throw std::runtime_error("failed to set non-blocking");
-    // }
+    if(fcntl(fd , F_SETFL , O_NONBLOCK) < 0)
+    {
+        close(fd);
+        throw std::runtime_error("failed to set non-blocking");
+    }
 
     NewPoll.fd= fd;
     NewPoll.events = POLLIN;

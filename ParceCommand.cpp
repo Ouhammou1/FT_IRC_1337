@@ -22,7 +22,6 @@ void     Server::ParseMessage(int clientFd ,std::string  msg)
             std::string removepoints = word.substr(1);
             std::string rest;
 
-            std::cout << "removepoints :]" << removepoints  << std::endl;
             if (std::getline(mes , rest))
                 removepoints = removepoints + rest;
             if (!removepoints.empty())
@@ -32,12 +31,63 @@ void     Server::ParseMessage(int clientFd ,std::string  msg)
     }
     if (parts.empty())
         return ;
-        
     
-    for (size_t i = 0; i < parts.size(); i++)
+    std::string cmd = parts[0];
+    std::transform(cmd.begin() , cmd.end() , cmd.begin() , ::toupper);
+
+    std::vector<std::string> parameters(parts.begin() + 1, parts.end());
+
+    for (size_t i = 0; i < parameters.size() ; i++)
     {
-        // std::cout  << i << std::endl;
-        std::cout << parts[i] << std::endl;
+        std::cout  << parameters[i] << std::endl;
     }
     
+    HandleCommand(clientFd , cmd , parameters);
+
+    // for (size_t i = 0; i < parts.size(); i++)
+    // {
+    //     // std::cout  << i << std::endl;
+    //     std::cout << parts[i] << std::endl;
+    // }
+    
+}
+
+
+void    Server::HandleCommand(int fd  , std::string cmd  , std::vector<std::string> args)
+{
+    std::cout << "Handling command: " << cmd << " from " << fd << std::endl << std::endl ;
+
+
+    if (cmd == "NICK")
+        handleNick(fd , args);
+
+    else if(cmd == "USER")
+        handleUser(fd , args);
+
+    else if(cmd == "PRIVMSG")
+        handlePrivmsg(fd , args);
+
+    else if(cmd == "JOIN")
+        handleJoin(fd , args);
+
+    else if(cmd == "PART")
+        handlePart(fd , args);
+
+    else if(cmd == "KICK")
+        handleKick(fd , args);
+
+    else if(cmd == "INVITE")
+        handleInvite(fd , args);
+
+    else if(cmd == "TOPIC")
+        handleTopic(fd , args);
+
+    else if(cmd == "MODE")
+        handleMode(fd , args);
+
+    else if(cmd == "PING")
+        handlePing(fd , args); 
+    
+    else
+        cmdNotFound(fd , args);
 }

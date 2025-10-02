@@ -43,6 +43,22 @@ public:
     void     ReceiveNewData(int clientFd);
     void     CloseServer();
     void     ParseMessage(int clientFd ,std::string  line);
+    void     HandleCommand(int fd  , std::string cmd  , std::vector<std::string> args);
+
+
+    void    handleNick( int fd , std::vector<std::string> args);
+    void    handleUser( int fd , std::vector<std::string> args);
+    void    handlePrivmsg( int fd , std::vector<std::string> args);
+    void    handleJoin( int fd , std::vector<std::string> args);
+    void    handlePart( int fd , std::vector<std::string> args);
+    void    handleKick( int fd , std::vector<std::string> args);
+    void    handleInvite( int fd , std::vector<std::string> args);
+    void    handleTopic( int fd , std::vector<std::string> args);
+    void    handleMode( int fd , std::vector<std::string> args);
+    void    handlePing( int fd , std::vector<std::string> args);
+    void    cmdNotFound( int fd , std::vector<std::string> args);
+
+
 };
 
 
