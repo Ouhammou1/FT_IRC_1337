@@ -1,8 +1,8 @@
 CC=c++
-CPPFILES=-Wall -Wextra -Werror -std=c++98
-CFILES= $(shell find . -name '*.cpp')
+CPPFLAGS=-Wall -Wextra -Werror -std=c++98
+CPPFILES= $(shell find . -name '*.cpp')
 HEADER=$(shell find . -name '*.hpp')
-OBJS=$(CFILES:.cpp=.o)
+OBJS=$(CPPFILES:.cpp=.o)
 
 
 NAME=ircserv
@@ -11,10 +11,10 @@ NAME=ircserv
 all:$(NAME)
 
 %.o:%.cpp $(HEADER)
-	$(CC) $(CPPFILES) -c $< -o $@
+	$(CC) $(CPPFLAGS) -c $< -o $@
 
 $(NAME):$(OBJS)
-	$(CC) $(CPPFILES) $(OBJS) -o $(NAME)
+	$(CC) $(CPPFLAGS) $(OBJS) -o $(NAME)
 
 clean:
 	@rm -rf $(OBJS)

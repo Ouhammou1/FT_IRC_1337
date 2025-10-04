@@ -57,12 +57,12 @@ void    Server::AcceptNewClient()
         perror("accept() failed");
         return ;
     }
-    // if (fcntl(clientFD  , F_SETFL , O_NONBLOCK ) < 0)
-    // {
-    //     perror("fcntl() failed");
-    //     close(clientFD);
-    //     return;
-    // }
+    if (fcntl(clientFD  , F_SETFL , O_NONBLOCK ) < 0)
+    {
+        perror("fcntl() failed");
+        close(clientFD);
+        return;
+    }
     
     std::cout << "New client connected: fd = " << clientFD << std::endl;
 
