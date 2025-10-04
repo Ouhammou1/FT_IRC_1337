@@ -138,6 +138,7 @@ void    Server::StartServer()
     while (Server::signal == false)
     {
         int ret = poll(&fds[0] , fds.size() , -1 );
+        printf("ret = %d \n ", ret);
         if (ret == -1 && Server::signal == false)
             throw std::runtime_error("Poll() Failed ");
 
