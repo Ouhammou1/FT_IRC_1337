@@ -69,44 +69,43 @@ void    Server::HandleCommand(int fd  , std::string cmd  , std::vector<std::stri
         else
             sendToClient(fd, ":server 462 " + client->getNickname() + " :You may not reregister");
     }
-    if(client->getRegistration() == false)
+
+
+    if(client->getRegistration() == true)
     {
-        std::cout << "Client no registration " << std::endl;
-        return ;
+        if (cmd == "NICK")
+            handleNick(fd , args);
+
+        else if(cmd == "USER")
+            handleUser(fd , args);
+
+        else if(cmd == "PRIVMSG")
+            handlePrivmsg(fd , args);
+
+        else if(cmd == "JOIN")
+            handleJoin(fd , args);
+
+        else if(cmd == "PART")
+            handlePart(fd , args);
+
+        else if(cmd == "KICK")
+            handleKick(fd , args);
+
+        else if(cmd == "INVITE")
+            handleInvite(fd , args);
+
+        else if(cmd == "TOPIC")
+            handleTopic(fd , args);
+
+        else if(cmd == "MODE")
+            handleMode(fd , args);
+
+        else if(cmd == "PING")
+            handlePing(fd , args); 
+        
+        else
+            cmdNotFound(fd , args);
     }
+    client->display();
 
-    // client->display();
-
-    if (cmd == "NICK")
-        handleNick(fd , args);
-
-    else if(cmd == "USER")
-        handleUser(fd , args);
-
-    else if(cmd == "PRIVMSG")
-        handlePrivmsg(fd , args);
-
-    else if(cmd == "JOIN")
-        handleJoin(fd , args);
-
-    else if(cmd == "PART")
-        handlePart(fd , args);
-
-    else if(cmd == "KICK")
-        handleKick(fd , args);
-
-    else if(cmd == "INVITE")
-        handleInvite(fd , args);
-
-    else if(cmd == "TOPIC")
-        handleTopic(fd , args);
-
-    else if(cmd == "MODE")
-        handleMode(fd , args);
-
-    else if(cmd == "PING")
-        handlePing(fd , args); 
-    
-    else
-        cmdNotFound(fd , args);
 }

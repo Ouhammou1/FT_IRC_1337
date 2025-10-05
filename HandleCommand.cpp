@@ -16,10 +16,7 @@ void        Server::handlePass( int fd , std::vector<std::string> args)
     std::cout << "GetPassword = [" << GetPassword() <<  "]" << std::endl;
 
     if(args[0] == GetPassword())
-    {
-        std::cout << "PASS is correct you are registerd " << std::endl;
         client->SetRegistration(true);
-    }
     else
     {
         sendToClient(fd, ":server 464 * :Password incorrect");
@@ -31,8 +28,17 @@ void        Server::handlePass( int fd , std::vector<std::string> args)
 
 void    Server::handleNick( int fd , std::vector<std::string> args)
 {
-    (void) fd;
-    (void) args;
+    Client *client = getClientByFd(fd);
+    if(client == NULL)
+        return ;
+    if(args.empty() ||  args[0].empty())
+    {
+        sendToClient(fd, ":server 461 * PASS :Not enough parameters");
+        return;
+    }
+
+    std::cout << "args[0] = [" << args[0] << "]" << std::endl;
+    client->setNickname(args[0]);
 }
 
 void        Server::handleUser( int fd , std::vector<std::string> args)

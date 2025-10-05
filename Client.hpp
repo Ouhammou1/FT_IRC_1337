@@ -24,11 +24,14 @@ public:
     std::string     getRealname() const;
 
     bool            getRegistration() ;
-    void            SetRegistration(bool reg) ;
 
 
     void            setFd(int newFD);
-
+    void            setNickname(std::string name);
+    void            setUsername(std::string name);
+    void            setRealname(std::string name);
+    void            SetRegistration(bool reg) ;
+  
 
 
 

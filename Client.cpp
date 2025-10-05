@@ -68,6 +68,19 @@ void            Client::setFd(int newFD)
     fd = newFD;
 }
 
+void     Client::setNickname(std::string name)
+{
+    nickname = name;
+}
+void     Client::setUsername(std::string name)
+{
+    username = name;
+}
+void     Client::setRealname(std::string name)
+{
+    realname = name;
+}
+
 
 
 void    Client::display()
