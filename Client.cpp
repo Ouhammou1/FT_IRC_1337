@@ -21,12 +21,12 @@ std::string     Client::getRealname() const
     return realname;
 }
 
-Client::Client(int fd ,std::string nickname , std::string username ,std::string realname):fd(fd) , nickname(nickname) , username(username) , realname(realname)
+Client::Client(int fd ,std::string nickname , std::string username ,std::string realname , bool registration):fd(fd) , nickname(nickname) , username(username) , realname(realname), registration(registration)
 {
 
 }
 
-Client::Client() : fd(-1) , nickname("") , username("")
+Client::Client() : fd(-1) , nickname("") , username("") , realname(""), registration(false)
 {
 
 }
@@ -40,10 +40,11 @@ Client& Client::operator=(const Client &other)
 {
     if(this != &other)
     {
-        // fd = other.fd;
-        nickname = other.nickname;
-        username = other.username;
-        realname = other.realname;
+        fd              = other.fd;
+        nickname        = other.nickname;
+        username        = other.username;
+        realname        = other.realname;
+        registration    = other.registration;
     }
     return *this;
 }
@@ -52,12 +53,32 @@ Client::~Client()
 {
 }
 
-void    Client::display(std::string nameObj)
+
+bool     Client::getRegistration()
 {
-    std::cout << "------------  " << nameObj << "  -------------" << std::endl; 
+    return registration;
+}
+void     Client::SetRegistration(bool reg)
+{
+    registration = reg;
+}
+
+void            Client::setFd(int newFD)
+{
+    fd = newFD;
+}
+
+
+
+void    Client::display()
+{
+
     std::cout << "fd  = " << fd << std::endl;
     std::cout << "nickname  = " << nickname << std::endl;
     std::cout << "username  = " << username << std::endl;
+    std::cout << "realname  = " << realname << std::endl;
+    std::cout << "registration  = " << registration << std::endl;
+
     std::cout << "\n\n\n" ;
 
 

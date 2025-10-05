@@ -57,13 +57,25 @@ void    Server::HandleCommand(int fd  , std::string cmd  , std::vector<std::stri
 {
     std::cout << "Handling command: " << cmd << " from " << fd << std::endl << std::endl ;
 
+    Client *client = getClientByFd(fd);
+    if(client == NULL)
+        return ;
 
-
-    if (cmd == "NICK")
+    if (cmd == "PASS" )
     {
-        handleNick(fd , args);
-
+        
+        if(client->getRegistration() == false)
+            handlePass(fd , args);
+        else
+            sendToClient(fd, ":server 462 " + client->getNickname() + " :You may not reregister");
     }
+    if(client->getRegistration() == false)
+    {
+        std::cout << "Client no registration " << std::endl;
+        return ;
+    }
+
+    // client->display();
 
     if (cmd == "NICK")
         handleNick(fd , args);

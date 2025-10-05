@@ -54,6 +54,7 @@ public:
     void     HandleCommand(int fd  , std::string cmd  , std::vector<std::string> args);
 
 
+    void    handlePass( int fd , std::vector<std::string> args);
     void    handleNick( int fd , std::vector<std::string> args);
     void    handleUser( int fd , std::vector<std::string> args);
     void    handlePrivmsg( int fd , std::vector<std::string> args);
@@ -65,6 +66,15 @@ public:
     void    handleMode( int fd , std::vector<std::string> args);
     void    handlePing( int fd , std::vector<std::string> args);
     void    cmdNotFound( int fd , std::vector<std::string> args);
+
+
+
+    Client*    getClientByFd(int fd);
+
+
+
+void        sendToClient(int fd, const std::string& message);
+void        RemoveClinet(int fd);
 
 
 };

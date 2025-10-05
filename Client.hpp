@@ -3,7 +3,7 @@
 class Client
 {
 private:
-    int fd;
+    int             fd;
     std::string     nickname;
     std::string     username;
     std::string     realname;
@@ -11,7 +11,7 @@ private:
 
 public:
     Client();
-    Client(int fd ,std::string nickname , std::string username , std::string realname);
+    Client(int fd ,std::string nickname , std::string username , std::string realname , bool registration);
     Client(const Client &other);
     Client& operator=(const Client &other);
     ~Client();
@@ -23,9 +23,16 @@ public:
     std::string     getUsername() const;
     std::string     getRealname() const;
 
+    bool            getRegistration() ;
+    void            SetRegistration(bool reg) ;
 
 
-    void    display(std::string nameObj);
+    void            setFd(int newFD);
+
+
+
+
+    void    display();
 };
 
 

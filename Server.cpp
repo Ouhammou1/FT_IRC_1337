@@ -72,7 +72,7 @@ std::string     Server::GetName()
 void     Server::setNameServer()
 {
     std::string input ;
-    std::cout << "Welcome to your server! Do you want to give a name to your server? (y/n): ";
+    std::cout << "Welcome to your server! Do you want to give a name to your server? (y): ";
     std::cin >> input;
     if(input.empty())
     {
@@ -89,3 +89,38 @@ void     Server::setNameServer()
         std::cout << "Server will have no name." << std::endl;
 }
 
+Client*    Server::getClientByFd(int fd)
+{
+    for (size_t i = 0; i < clients.size() ; i++)
+    {
+        if(clients[i].getFd() == fd)
+            return  &clients[i];
+    }
+    return NULL;
+}
+
+
+void         Server::sendToClient(int fd, const std::string& message)
+{
+    // std::cout << "GetName = " << GetName() << std::endl;
+    std::string msg = GetName() +  message + "\r\n";
+
+    send(fd , msg.c_str() , msg.length() , 0);
+}
+
+void    Server::RemoveClinet(int fd)
+{
+    for(size_t i = 0 ; i < fds.size() ; i++)
+    {
+        if (fds[i].fd == fd )
+        {
+            fds.erase(fds.begin() + i);
+            break;
+        }
+    }
+    for (size_t i = 0; i < clients.size(); i++)
+    {
+        clients.erase(clients.begin() + i);
+        break;
+    }
+}

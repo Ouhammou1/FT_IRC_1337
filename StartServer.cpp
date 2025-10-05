@@ -48,8 +48,11 @@ void    Server::CreateSocket()
 
 void    Server::AcceptNewClient()
 {
-    struct  sockaddr_in clientAddr;
-    socklen_t   clientlen = sizeof(clientAddr);
+    Client          newClient;
+    struct          sockaddr_in clientAddr;
+    socklen_t       clientlen = sizeof(clientAddr);
+    pollfd          mypollfd;
+
 
     int clientFD = accept(fd , (struct sockaddr*)&clientAddr , &clientlen);
     if(clientFD == -1)
@@ -66,12 +69,15 @@ void    Server::AcceptNewClient()
     
     std::cout << "New client connected: fd = " << clientFD << std::endl;
 
-    pollfd fdd;
 
-    fdd.fd = clientFD;
-    fdd.events = POLLIN;
-    fdd.revents = 0;
-    fds.push_back(fdd);
+    newClient.setFd(clientFD);
+    clients.push_back(newClient);
+
+    mypollfd.fd = clientFD;
+    mypollfd.events = POLLIN;
+    mypollfd.revents = 0;
+
+    fds.push_back(mypollfd);
 }
 
 void    Server::ReceiveNewData(int clientFd)
@@ -138,7 +144,6 @@ void    Server::StartServer()
     while (Server::signal == false)
     {
         int ret = poll(&fds[0] , fds.size() , -1 );
-        printf("ret = %d \n ", ret);
         if (ret == -1 && Server::signal == false)
             throw std::runtime_error("Poll() Failed ");
 
