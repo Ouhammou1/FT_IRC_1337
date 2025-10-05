@@ -12,11 +12,13 @@
 class Server
 {
 private:
-    int     fd;
-    int     port;
-    std::string     password;
+    int                 fd;
+    int                 port;
+    std::string         password;
+    std::string         name;
     std::vector<Client> clients;
-    static bool signal ;
+    static bool         signal ;
+    
     std::vector<struct pollfd> fds;
 
   
@@ -33,8 +35,14 @@ public:
     void    SetPassword(std::string password);
 
     int            GetFd();
-    int   GetPort();
+    int            GetPort();
     std::string    GetPassword();
+
+    // bool    setNameServer(char c);
+    void     setNameServer();
+
+    void            SetName(std::string name);
+    std::string     GetName();
 
     static void     SignalHandel(int signal);
     void            CreateSocket();

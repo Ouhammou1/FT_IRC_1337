@@ -4,9 +4,10 @@ class Client
 {
 private:
     int fd;
-    std::string nickname;
-    std::string username;
-    std::string realname;
+    std::string     nickname;
+    std::string     username;
+    std::string     realname;
+    bool            registration;
 
 public:
     Client();

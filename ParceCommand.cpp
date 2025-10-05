@@ -58,6 +58,13 @@ void    Server::HandleCommand(int fd  , std::string cmd  , std::vector<std::stri
     std::cout << "Handling command: " << cmd << " from " << fd << std::endl << std::endl ;
 
 
+
+    if (cmd == "NICK")
+    {
+        handleNick(fd , args);
+
+    }
+
     if (cmd == "NICK")
         handleNick(fd , args);
 

@@ -17,6 +17,7 @@ bool PortNumber(std::string &str)
 }
 
 
+
 int main(int ac , char **av)
 {
 
@@ -35,6 +36,8 @@ int main(int ac , char **av)
         if(!PortNumber(str))
             throw std::invalid_argument("Port must be a numeric value");
         
+    
+        server.setNameServer();
         // signal(SIGINT , Server::SignalHandel);
         signal(SIGQUIT , Server::SignalHandel);
         server.SetPort(str);
