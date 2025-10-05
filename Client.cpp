@@ -21,12 +21,12 @@ std::string     Client::getRealname() const
     return realname;
 }
 
-Client::Client(int fd ,std::string nickname , std::string username ,std::string realname , bool registration):fd(fd) , nickname(nickname) , username(username) , realname(realname), registration(registration)
+Client::Client(int fd ,std::string nickname , std::string username ,std::string realname , bool registration ,bool nick , bool user):fd(fd) , nickname(nickname) , username(username) , realname(realname), registration(registration) , nick(nick) , user(user)
 {
 
 }
 
-Client::Client() : fd(-1) , nickname("") , username("") , realname(""), registration(false)
+Client::Client() : fd(-1) , nickname("") , username("") , realname(""), registration(false) , nick(false), user(false)
 {
 
 }
@@ -82,6 +82,23 @@ void     Client::setRealname(std::string name)
 }
 
 
+bool            Client::getNick()
+{
+    return nick;
+}
+bool            Client::getUser()
+{
+    return user;
+}
+
+void            Client::setNick(bool nick)
+{
+        this->nick = nick;
+}
+void            Client::setUser(bool user)
+{
+        this->user = user;
+}
 
 void    Client::display()
 {

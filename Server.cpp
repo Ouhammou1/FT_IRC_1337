@@ -120,7 +120,10 @@ void    Server::RemoveClinet(int fd)
     }
     for (size_t i = 0; i < clients.size(); i++)
     {
-        clients.erase(clients.begin() + i);
-        break;
+        if(clients[i].getFd() == fd)
+        {
+            clients.erase(clients.begin() + i);
+            break;
+        }
     }
 }

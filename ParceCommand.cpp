@@ -63,23 +63,23 @@ void    Server::HandleCommand(int fd  , std::string cmd  , std::vector<std::stri
 
     if (cmd == "PASS" )
     {
-        
         if(client->getRegistration() == false)
             handlePass(fd , args);
         else
             sendToClient(fd, ":server 462 " + client->getNickname() + " :You may not reregister");
     }
+    if (cmd == "NICK")
+        handleNick(fd , args);
 
+    if(cmd == "USER")
+        handleUser(fd , args);
 
-    if(client->getRegistration() == true)
+    // if(client->getRegistration() == true && client->getNick() == true && client->getUser() == true)
+
+    if (client->getRegistration() && client->getNick() && client->getUser())
     {
-        if (cmd == "NICK")
-            handleNick(fd , args);
 
-        else if(cmd == "USER")
-            handleUser(fd , args);
-
-        else if(cmd == "PRIVMSG")
+        if(cmd == "PRIVMSG")
             handlePrivmsg(fd , args);
 
         else if(cmd == "JOIN")
@@ -104,8 +104,9 @@ void    Server::HandleCommand(int fd  , std::string cmd  , std::vector<std::stri
             handlePing(fd , args); 
         
         else
-            cmdNotFound(fd , args);
+            cmdNotFound(fd , cmd);
     }
+if (!client->getRegistration() && !client->getNick() && !client->getUser())
+        sendToClient(fd, ":server 462 " + client->getNickname() + " :You must register first");
     client->display();
-
-}
+} 
