@@ -72,7 +72,7 @@ std::string     Server::GetName()
 void     Server::setNameServer()
 {
     std::string input ;
-    std::cout << "Welcome to your server! Do you want to give a name to your server? (y): ";
+    std::cout << "Welcome to your server! Do you want to give a name to your server? (Y/y): ";
     std::cin >> input;
     if(input.empty())
     {
@@ -127,3 +127,14 @@ void    Server::RemoveClinet(int fd)
         }
     }
 }
+
+
+std::string     Server::getCurrentTime()
+{
+    std::time_t  time = std::time(NULL);
+    std::tm  *local  = std::localtime(&time);
+    char  buffer[80];
+    std::strftime(buffer , sizeof(buffer) , "[%Y-%m-%d %H:%M:%S]" , local);
+    return  std::string(buffer);
+}
+

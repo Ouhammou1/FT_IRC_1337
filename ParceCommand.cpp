@@ -6,8 +6,6 @@ void     Server::ParseMessage(int clientFd ,std::string  msg)
     if(msg.empty())
         return;
 
-    std::cout  << "Parsing message from client " << clientFd << " :" << msg << std::endl;
-
     std::istringstream mes(msg);
     std::string word;
     std::vector<std::string> parts;
@@ -37,10 +35,10 @@ void     Server::ParseMessage(int clientFd ,std::string  msg)
 
     std::vector<std::string> parameters(parts.begin() + 1, parts.end());
 
-    for (size_t i = 0; i < parameters.size() ; i++)
-    {
-        std::cout  << parameters[i] << std::endl;
-    }
+    // for (size_t i = 0; i < parameters.size() ; i++)
+    // {
+    //     std::cout  << parameters[i] << std::endl;
+    // }
     
     HandleCommand(clientFd , cmd , parameters);
 
@@ -53,60 +51,145 @@ void     Server::ParseMessage(int clientFd ,std::string  msg)
 }
 
 
-void    Server::HandleCommand(int fd  , std::string cmd  , std::vector<std::string> args)
+// void    Server::HandleCommand(int fd  , std::string cmd  , std::vector<std::string> args)
+// {
+//     std::cout << "Handling command: " << cmd << " from " << fd << std::endl << std::endl ;
+
+//     Client *client = getClientByFd(fd);
+//     if(client == NULL)
+//         return ;
+
+//     if (cmd == "PASS" )
+//     {
+//         if(client->getRegistration() == false)
+//             handlePass(fd , args);
+//         else
+//             sendToClient(fd, ":server 462 " + client->getNickname() + " :You may not reregister");
+//     }
+//     if (cmd == "NICK")
+//         handleNick(fd , args);
+
+//     if(cmd == "USER")
+//         handleUser(fd , args);
+
+//     // if(client->getRegistration() == true && client->getNick() == true && client->getUser() == true)
+
+//     if (client->getRegistration() ==true && client->getNick() == true && client->getUser() == true)
+//     {
+
+//         if(cmd == "PRIVMSG")
+//             handlePrivmsg(fd , args);
+
+//         else if(cmd == "JOIN")
+//             handleJoin(fd , args);
+
+//         else if(cmd == "PART")
+//             handlePart(fd , args);
+
+//         else if(cmd == "KICK")
+//             handleKick(fd , args);
+
+//         else if(cmd == "INVITE")
+//             handleInvite(fd , args);
+
+//         else if(cmd == "TOPIC")
+//             handleTopic(fd , args);
+
+//         else if(cmd == "MODE")
+//             handleMode(fd , args);
+
+//         else if(cmd == "PING")
+//             handlePing(fd , args); 
+        
+//         else
+//             cmdNotFound(fd , cmd);
+//     }
+//     if (client->getRegistration() == false || client->getNick() == false || client->getUser() == false) 
+//         sendToClient(fd, ":server 462 " + client->getNickname() + " :You must register first");
+    
+
+//     client->display();
+// } 
+
+
+
+void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> args)
 {
-    std::cout << "Handling command: " << cmd << " from " << fd << std::endl << std::endl ;
+    std::cout << getCurrentTime() << " Handling command: " << cmd << " from client fd = " << fd << std::endl << std::endl;
 
     Client *client = getClientByFd(fd);
     if(client == NULL)
-        return ;
+        return;
 
-    if (cmd == "PASS" )
+    if (cmd == "PASS")
+    {
+        if(client->getRegistration() == true)
+            sendToClient(fd, ":server 462 " + client->getNickname() + " :You may not reregister");
+        else
+            handlePass(fd, args);
+        return;
+    }
+
+    if (cmd == "NICK")
     {
         if(client->getRegistration() == false)
-            handlePass(fd , args);
-        else
-            sendToClient(fd, ":server 462 " + client->getNickname() + " :You may not reregister");
+        {
+            sendToClient(fd, ":server 451 * :You have not registered");
+            return;
+        }
+        handleNick(fd, args);
+        return;
     }
-    if (cmd == "NICK")
-        handleNick(fd , args);
 
     if(cmd == "USER")
-        handleUser(fd , args);
-
-    // if(client->getRegistration() == true && client->getNick() == true && client->getUser() == true)
-
-    if (client->getRegistration() && client->getNick() && client->getUser())
     {
-
-        if(cmd == "PRIVMSG")
-            handlePrivmsg(fd , args);
-
-        else if(cmd == "JOIN")
-            handleJoin(fd , args);
-
-        else if(cmd == "PART")
-            handlePart(fd , args);
-
-        else if(cmd == "KICK")
-            handleKick(fd , args);
-
-        else if(cmd == "INVITE")
-            handleInvite(fd , args);
-
-        else if(cmd == "TOPIC")
-            handleTopic(fd , args);
-
-        else if(cmd == "MODE")
-            handleMode(fd , args);
-
-        else if(cmd == "PING")
-            handlePing(fd , args); 
+        if(client->getRegistration() == false)
+        {
+            sendToClient(fd, ":server 451 * :You have not registered");
+            return;
+        }
+        if(client->getNick() == false)
+        {
+            sendToClient(fd, ":server 451 * :You must set a nickname first");
+            return;
+        }
+        handleUser(fd, args);
         
-        else
-            cmdNotFound(fd , cmd);
+        if(client->getUser() == true)
+        {
+            sendToClient(fd, ":server 001 " + client->getNickname() + 
+                " :Welcome to the IRC Network, " + client->getNickname() + 
+                "!" + client->getUsername() + "@localhost");
+            sendToClient(fd, ":server 002 " + client->getNickname() + 
+                " :Your host is " + GetName());
+        }
+        return;
     }
-if (!client->getRegistration() && !client->getNick() && !client->getUser())
-        sendToClient(fd, ":server 462 " + client->getNickname() + " :You must register first");
-    client->display();
-} 
+
+    if (client->getRegistration() == false ||  client->getNick() == false ||  client->getUser() == false)
+    {
+        sendToClient(fd, ":server 451 " + client->getNickname() + " :You have not registered");
+        return;
+    }
+
+    if(cmd == "JOIN")
+        handleJoin(fd, args);
+    else if(cmd == "PRIVMSG")
+        handlePrivmsg(fd, args);
+    else if(cmd == "PART")
+        handlePart(fd, args);
+    else if(cmd == "KICK")
+        handleKick(fd, args);
+    else if(cmd == "INVITE")
+        handleInvite(fd, args);
+    else if(cmd == "TOPIC")
+        handleTopic(fd, args);
+    else if(cmd == "MODE")
+        handleMode(fd, args);
+    else if(cmd == "PING")
+        handlePing(fd, args);
+    else
+        cmdNotFound(fd, cmd);
+
+    // client->display();
+}

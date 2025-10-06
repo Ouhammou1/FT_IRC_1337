@@ -7,7 +7,12 @@
 #include <unistd.h>
 #include <poll.h>
 #include <sstream>
+#include <ctime>
 
+#define GREEN "\033[32m"
+#define RESET "\033[0m"
+#define RED     "\033[31m"
+#define YELLOW  "\033[33m"
 
 class Server
 {
@@ -73,9 +78,10 @@ public:
 
 
 
-void        sendToClient(int fd, const std::string& message);
-void        RemoveClinet(int fd);
+    void        sendToClient(int fd, const std::string& message);
+    void        RemoveClinet(int fd);
 
+    std::string     getCurrentTime();
 
 };
 

@@ -67,7 +67,7 @@ void    Server::AcceptNewClient()
         return;
     }
     
-    std::cout << "New client connected: fd = " << clientFD << std::endl;
+    std::cout << GREEN << getCurrentTime() << " New client connected: fd = " << clientFD << RESET <<std::endl << std::endl;
 
 
     newClient.setFd(clientFD);
@@ -88,9 +88,8 @@ void    Server::ReceiveNewData(int clientFd)
     ssize_t bytRead = recv(clientFd , buffer , sizeof(buffer) -1 ,  0) ;
     if (bytRead <= 0)
     {
-        std::cout << "bytRead =   -------------------------------> " << bytRead << std::endl;
         if(bytRead == 0)
-            std::cout << "Client " << clientFd << " disconnected." << std::endl;
+            std::cout << getCurrentTime() << " Client " << clientFd << " disconnected." << std::endl;
         else
             perror("recv() failed ");
         
@@ -115,7 +114,7 @@ void    Server::ReceiveNewData(int clientFd)
     else
     {
         buffer[bytRead] ='\0';
-        std::cout << "Receied from " << clientFd  << ": " << buffer << std::endl; 
+        std::cout << getCurrentTime() << " Receied from client connected: fd = " << clientFd  << ": " << buffer ; 
 
 
         std::string data(buffer);
