@@ -51,66 +51,6 @@ void     Server::ParseMessage(int clientFd ,std::string  msg)
 }
 
 
-// void    Server::HandleCommand(int fd  , std::string cmd  , std::vector<std::string> args)
-// {
-//     std::cout << "Handling command: " << cmd << " from " << fd << std::endl << std::endl ;
-
-//     Client *client = getClientByFd(fd);
-//     if(client == NULL)
-//         return ;
-
-//     if (cmd == "PASS" )
-//     {
-//         if(client->getRegistration() == false)
-//             handlePass(fd , args);
-//         else
-//             sendToClient(fd, ":server 462 " + client->getNickname() + " :You may not reregister");
-//     }
-//     if (cmd == "NICK")
-//         handleNick(fd , args);
-
-//     if(cmd == "USER")
-//         handleUser(fd , args);
-
-//     // if(client->getRegistration() == true && client->getNick() == true && client->getUser() == true)
-
-//     if (client->getRegistration() ==true && client->getNick() == true && client->getUser() == true)
-//     {
-
-//         if(cmd == "PRIVMSG")
-//             handlePrivmsg(fd , args);
-
-//         else if(cmd == "JOIN")
-//             handleJoin(fd , args);
-
-//         else if(cmd == "PART")
-//             handlePart(fd , args);
-
-//         else if(cmd == "KICK")
-//             handleKick(fd , args);
-
-//         else if(cmd == "INVITE")
-//             handleInvite(fd , args);
-
-//         else if(cmd == "TOPIC")
-//             handleTopic(fd , args);
-
-//         else if(cmd == "MODE")
-//             handleMode(fd , args);
-
-//         else if(cmd == "PING")
-//             handlePing(fd , args); 
-        
-//         else
-//             cmdNotFound(fd , cmd);
-//     }
-//     if (client->getRegistration() == false || client->getNick() == false || client->getUser() == false) 
-//         sendToClient(fd, ":server 462 " + client->getNickname() + " :You must register first");
-    
-
-//     client->display();
-// } 
-
 
 
 void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> args)
@@ -176,8 +116,10 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
         handleJoin(fd, args);
     else if(cmd == "PRIVMSG")
         handlePrivmsg(fd, args);
-    else if(cmd == "PART")
-        handlePart(fd, args);
+
+        
+    // else if(cmd == "PART")
+    //     handlePart(fd, args);
     else if(cmd == "KICK")
         handleKick(fd, args);
     else if(cmd == "INVITE")
@@ -186,8 +128,8 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
         handleTopic(fd, args);
     else if(cmd == "MODE")
         handleMode(fd, args);
-    else if(cmd == "PING")
-        handlePing(fd, args);
+    // else if(cmd == "PING")
+    //     handlePing(fd, args);
     else
         cmdNotFound(fd, cmd);
 
