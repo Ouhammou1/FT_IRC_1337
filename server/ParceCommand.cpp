@@ -64,7 +64,7 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
     if (cmd == "PASS")
     {
         if(client->getRegistration() == true)
-            sendToClient(fd, ":server 462 " + client->getNickname() + " :You may not reregister");
+            sendToClient(fd, " 462 " + client->getNickname() + " :You may not reregister");
         else
             handlePass(fd, args);
         return;
@@ -74,7 +74,7 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
     {
         if(client->getRegistration() == false)
         {
-            sendToClient(fd, ":server 451 * :You have not registered");
+            sendToClient(fd, " 451 * :You have not registered");
             return;
         }
         handleNick(fd, args);
@@ -85,22 +85,22 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
     {
         if(client->getRegistration() == false)
         {
-            sendToClient(fd, ":server 451 * :You have not registered");
+            sendToClient(fd, " 451 * :You have not registered");
             return;
         }
         if(client->getNick() == false)
         {
-            sendToClient(fd, ":server 451 * :You must set a nickname first");
+            sendToClient(fd, " 451 * :You must set a nickname first");
             return;
         }
         handleUser(fd, args);
         
         if(client->getUser() == true)
         {
-            sendToClient(fd, ":server 001 " + client->getNickname() + 
+            sendToClient(fd, " 001 " + client->getNickname() + 
                 " :Welcome to the IRC Network, " + client->getNickname() + 
                 "!" + client->getUsername() + "@localhost");
-            sendToClient(fd, ":server 002 " + client->getNickname() + 
+            sendToClient(fd, " 002 " + client->getNickname() + 
                 " :Your host is " + GetName());
         }
         return;
@@ -108,7 +108,7 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
 
     if (client->getRegistration() == false ||  client->getNick() == false ||  client->getUser() == false)
     {
-        sendToClient(fd, ":server 451 " + client->getNickname() + " :You have not registered");
+        sendToClient(fd, " 451 " + client->getNickname() + " :You have not registered");
         return;
     }
 

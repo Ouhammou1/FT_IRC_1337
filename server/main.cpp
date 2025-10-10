@@ -23,7 +23,7 @@ int main(int ac , char **av)
 
     if(ac != 3)
     {
-        std::cout <<  "Invalid argument. Usage: " <<av[0] << " <PORT> <PASSWORD>"  << std::endl;
+        std::cout <<  "Invalid argument. Usage: " <<av[0] << " <PORT> <PASSWORD>"  << std::endl ;
         return 0;
     }
     Server server;
@@ -35,13 +35,13 @@ int main(int ac , char **av)
 
         if(!PortNumber(str))
             throw std::invalid_argument("Port must be a numeric value");
-        
     
         server.setNameServer();
         // signal(SIGINT , Server::SignalHandel);
         signal(SIGQUIT , Server::SignalHandel);
         server.SetPort(str);
         server.SetPassword(password);
+        std::cout << BLUE<< "Server "<< server.GetName() << " listening on port "<<server.GetPort() <<"..."<< RESET << std::endl << std::endl ;
         server.StartServer();
 
 
