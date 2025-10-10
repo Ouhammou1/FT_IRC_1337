@@ -50,10 +50,8 @@ std::string    realNmae(std::vector<std::string> args)
     {
         if (!realname.empty())
             realname += " ";
-        if(args[3][0] == ':')
-            realname += args[3].substr(1);
-        else
-            realname +=args[i];
+        
+        realname +=args[i];
     }
     return realname;
 }
@@ -70,20 +68,18 @@ void        Server::handleUser( int fd , std::vector<std::string> args)
         return;
     }
 
-    if(args.empty() ||  args[0].empty() || args[3].empty())
+    if(args.size() < 4)
     {
         sendToClient(fd, " 461 " + client->getNickname() + " USER :Not enough parameters");
         return;
     }
-    if(!args.empty() &&   !args[3].empty() && args[3][0] != ":")
-    {
-        sendToClient(fd, " 461 " + client->getNickname() + " USER :Invalid Realname");
-        return;
-    }
+
+    std::string realname =realNmae(args);
     client->setUsername(args[0]);
-    client->setRealname(realNmae(args));
+    client->setRealname(realname);
+    std::cout << " realNmae(args) " << realname << std::endl;
     client->setUser(true);
-    std::cout << YELLOW << getCurrentTime() << " Client " << fd << " registered with username: "  << args[0] << " and realname: " << args[3] << RESET<< std::endl;
+    std::cout << YELLOW << getCurrentTime() << " Client " << fd << " registered with username: "  << args[0] << " and realname: " << realname << RESET<< std::endl;
 }
 void        Server::handlePrivmsg( int fd , std::vector<std::string> args)
 {

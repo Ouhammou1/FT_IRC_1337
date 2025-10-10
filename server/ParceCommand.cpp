@@ -11,7 +11,7 @@ void     Server::ParseMessage(int clientFd ,std::string  msg)
     std::vector<std::string> parts;
 
 
-    while (mes>> word && !word.empty())
+    while (mes >> word && !word.empty())
     {
         if(word[0] != ':')
             parts.push_back(word);
@@ -33,21 +33,9 @@ void     Server::ParseMessage(int clientFd ,std::string  msg)
     std::string cmd = parts[0];
     std::transform(cmd.begin() , cmd.end() , cmd.begin() , ::toupper);
 
-    std::vector<std::string> parameters(parts.begin() + 1, parts.end());
-
-    // for (size_t i = 0; i < parameters.size() ; i++)
-    // {
-    //     std::cout  << parameters[i] << std::endl;
-    // }
-    
+    std::vector<std::string> parameters(parts.begin() + 1, parts.end());    
     HandleCommand(clientFd , cmd , parameters);
 
-    // for (size_t i = 0; i < parts.size(); i++)
-    // {
-    //     // std::cout  << i << std::endl;
-    //     std::cout << parts[i] << std::endl;
-    // }
-    
 }
 
 
@@ -74,7 +62,7 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
     {
         if(client->getRegistration() == false)
         {
-            sendToClient(fd, " 451 * :You have not registered");
+            sendToClient(fd, " 451 * PASS:You have not registered");
             return;
         }
         handleNick(fd, args);
@@ -85,23 +73,19 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
     {
         if(client->getRegistration() == false)
         {
-            sendToClient(fd, " 451 * :You have not registered");
+            sendToClient(fd, " 451 * PASS:You have not registered");
             return;
         }
         if(client->getNick() == false)
         {
-            sendToClient(fd, " 451 * :You must set a nickname first");
+            sendToClient(fd, " 451 * NICK:You must set a nickname first");
             return;
         }
         handleUser(fd, args);
         
         if(client->getUser() == true)
         {
-            sendToClient(fd, " 001 " + client->getNickname() + 
-                " :Welcome to the IRC Network, " + client->getNickname() + 
-                "!" + client->getUsername() + "@localhost");
-            sendToClient(fd, " 002 " + client->getNickname() + 
-                " :Your host is " + GetName());
+            sendToClient(fd, " 001 " + client->getRealname() + " :Welcome to the IRC Network");
         }
         return;
     }
