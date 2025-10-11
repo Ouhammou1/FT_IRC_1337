@@ -79,7 +79,7 @@ void     Server::setNameServer()
         std::cout << "No name for your server." << std::endl;
         return ;
     }
-    if ( input == "Y" | input == "y")
+    if ( input == "Y" || input == "y")
     {
         std::cout << "Enter the server name: ";
         std::cin >> input;
