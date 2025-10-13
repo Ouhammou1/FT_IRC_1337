@@ -25,9 +25,9 @@ public:
     std::string     getUsername() const;
     std::string     getRealname() const;
 
-    bool            getRegistration() ;
-    bool            getNick();
-    bool            getUser();
+    bool            getRegistration() const;
+    bool            getNick() const ;
+    bool            getUser() const;
 
     void            setFd(int newFD);
     void            setNickname(std::string name);

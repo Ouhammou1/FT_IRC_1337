@@ -21,7 +21,6 @@ void        Server::handlePass( int fd , std::vector<std::string> args)
     else
     {
         sendToClient(fd, " 464 * PASS :Password incorrect");
-        // RemoveClinet(fd);
         return ;
     }
     std::cout << RED << getCurrentTime() << " Client " << fd << " authenticated successfully" << RESET <<std::endl;
@@ -83,6 +82,10 @@ void        Server::handleUser( int fd , std::vector<std::string> args)
 }
 void        Server::handlePrivmsg( int fd , std::vector<std::string> args)
 {
+
+    Client *client = getClientByFd(fd);
+
+     sendToClient(fd , ":" + GetName() + " 1337 " + client->getNickname() + " :privmsg cmd it recived");
     (void) fd;
     (void) args;
 }

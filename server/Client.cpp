@@ -45,6 +45,8 @@ Client& Client::operator=(const Client &other)
         username        = other.username;
         realname        = other.realname;
         registration    = other.registration;
+        nick            = other.nick;
+        user            = other.user;
     }
     return *this;
 }
@@ -54,7 +56,7 @@ Client::~Client()
 }
 
 
-bool     Client::getRegistration()
+bool     Client::getRegistration() const 
 {
     return registration;
 }
@@ -82,11 +84,11 @@ void     Client::setRealname(std::string name)
 }
 
 
-bool            Client::getNick()
+bool            Client::getNick() const
 {
     return nick;
 }
-bool            Client::getUser()
+bool            Client::getUser() const 
 {
     return user;
 }
@@ -107,7 +109,10 @@ void    Client::display()
     std::cout << "nickname  = " << nickname << std::endl;
     std::cout << "username  = " << username << std::endl;
     std::cout << "realname  = " << realname << std::endl;
-    std::cout << "registration  = " << registration << std::endl;
+    std::cout << "registration  flags = " << registration << std::endl;
+    std::cout << "nick flags = " << nick << std::endl;
+    std::cout << "user flags  = " << user  << std::endl;
+
 
     std::cout << "\n\n\n" ;
 

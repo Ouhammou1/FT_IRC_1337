@@ -102,8 +102,7 @@ Client*    Server::getClientByFd(int fd)
 
 void         Server::sendToClient(int fd, const std::string& message)
 {
-    // std::cout << "GetName = " << GetName() << std::endl;
-    std::string msg = GetName() +  message + "\r\n";
+    std::string msg = message + "\r\n";
 
     send(fd , msg.c_str() , msg.length() , 0);
 }
@@ -127,6 +126,7 @@ void    Server::RemoveClinet(int fd)
         }
     }
 }
+
 
 
 std::string     Server::getCurrentTime()
