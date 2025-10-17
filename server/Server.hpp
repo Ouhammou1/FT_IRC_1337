@@ -8,6 +8,7 @@
 #include <poll.h>
 #include <sstream>
 #include <ctime>
+#include "Channel.hpp"
 
 #define GREEN "\033[32m"
 #define RESET "\033[0m"
@@ -24,6 +25,7 @@ private:
     std::string         password;
     std::string         name;
     std::vector<Client> clients;
+    std::vector<Channel> channels;
     static bool         signal ;
     
     std::vector<struct pollfd> fds;
@@ -66,12 +68,12 @@ public:
     void    handleUser( int fd , std::vector<std::string> args);
     void    handlePrivmsg( int fd , std::vector<std::string> args);
     void    handleJoin( int fd , std::vector<std::string> args);
-    void    handlePart( int fd , std::vector<std::string> args);
-    void    handleKick( int fd , std::vector<std::string> args);
-    void    handleInvite( int fd , std::vector<std::string> args);
-    void    handleTopic( int fd , std::vector<std::string> args);
-    void    handleMode( int fd , std::vector<std::string> args);
-    void    handlePing( int fd , std::vector<std::string> args);
+    // void    handlePart( int fd , std::vector<std::string> args);
+    // void    handleKick( int fd , std::vector<std::string> args);
+    // void    handleInvite( int fd , std::vector<std::string> args);
+    // void    handleTopic( int fd , std::vector<std::string> args);
+    // void    handleMode( int fd , std::vector<std::string> args);
+    // void    handlePing( int fd , std::vector<std::string> args);
     void    cmdNotFound( int fd , std::string cmd );
 
 
@@ -84,6 +86,9 @@ public:
     void        RemoveClinet(int fd);
 
     std::string     getCurrentTime();
+
+    //Youssef part channels
+    bool search_channels(std::string name);
 
 };
 

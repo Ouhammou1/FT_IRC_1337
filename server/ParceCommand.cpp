@@ -1,5 +1,5 @@
 #include "Server.hpp"
-
+#include "Channel.hpp"
 
 void     Server::ParseMessage(int clientFd ,std::string  msg)
 {
@@ -46,6 +46,7 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
     std::cout << getCurrentTime() << " Handling command: " << cmd << " from client fd = " << fd << std::endl << std::endl;
 
     Client *client = getClientByFd(fd);
+    // Channel *chan(&Client);
     if(client == NULL)
         return;
 
@@ -97,25 +98,30 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
     }
 
     if(cmd == "JOIN")
+    {
+        // std::cout << "antoine" << std::endl;
         handleJoin(fd, args);
-    else if(cmd == "PRIVMSG")
-        handlePrivmsg(fd, args);
+    }
+    // else if(cmd == "PRIVMSG")
+    //     handlePrivmsg(fd, args);
 
         
-    // else if(cmd == "PART")
-    //     handlePart(fd, args);
-    else if(cmd == "KICK")
-        handleKick(fd, args);
-    else if(cmd == "INVITE")
-        handleInvite(fd, args);
-    else if(cmd == "TOPIC")
-        handleTopic(fd, args);
-    else if(cmd == "MODE")
-        handleMode(fd, args);
-    // else if(cmd == "PING")
-    //     handlePing(fd, args);
-    else
-        cmdNotFound(fd, cmd);
+    // // else if(cmd == "PART")
+    // //     handlePart(fd, args);
+    // else if(cmd == "KICK")
+    //     handleKick(fd, args);
+    // else if(cmd == "INVITE")
+    //     handleInvite(fd, args);
+    // else if(cmd == "TOPIC")
+    //     handleTopic(fd, args);
+    // else if(cmd == "MODE")
+    //     handleMode(fd, args);
+    // // else if(cmd == "PING")
+    // //     handlePing(fd, args);
+    // else
+    //     cmdNotFound(fd, cmd);
 
     // client->display();
 }
+
+// void Server::handleJoin()
