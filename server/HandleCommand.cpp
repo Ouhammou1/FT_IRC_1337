@@ -73,11 +73,26 @@ void        Server::handleUser( int fd , std::vector<std::string> args)
     }
 
     std::string realname =realNmae(args);
+
+    std::vector<Client> clients = getClients();
+    for (size_t i = 0; i < clients.size(); i++)
+    {
+        if(clients[i].getUsername() == args[0])
+        {
+            clients[i].display();
+            sendToClient(fd , ":" + GetName() + " " + client->getNickname() + " USER exists ");
+            return;
+        }
+    }
+    
     client->setUsername(args[0]);
     client->setRealname(realname);
     std::cout << " realNmae(args) " << realname << std::endl;
     client->setUser(true);
     std::cout << YELLOW << getCurrentTime() << " Client " << fd << " registered with username: "  << args[0] << " and realname: " << realname << RESET<< std::endl;
+    
+    if(client->getUser() == true )
+        sendToClient(fd, ":" + GetName() + " 001 " + client->getNickname() + " :Welcome to the IRC Network " + client->getUsername()+ "!");
 }
 
 

@@ -84,11 +84,6 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
         }
         handleUser(fd, args);
         
-        if(client->getUser() == true)
-        {
-            sendToClient(fd, ":" + GetName() + " 001 " + client->getNickname() + " :Welcome to the IRC Network " + client->getNickname() + "!");
-        }
-        return;
     }
 
     if (client->getRegistration() == false ||  client->getNick() == false ||  client->getUser() == false)

@@ -46,6 +46,7 @@ public:
     int            GetFd();
     int            GetPort();
     std::string    GetPassword();
+    std::vector<Client> getClients();
 
     // bool    setNameServer(char c);
     void     setNameServer();
