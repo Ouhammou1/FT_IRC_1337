@@ -102,8 +102,8 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
         // std::cout << "antoine" << std::endl;
         handleJoin(fd, args);
     }
-    // else if(cmd == "PRIVMSG")
-    //     handlePrivmsg(fd, args);
+    else if(cmd == "PRIVMSG")
+        handlePrivmsg(fd, args);
 
         
     // // else if(cmd == "PART")
