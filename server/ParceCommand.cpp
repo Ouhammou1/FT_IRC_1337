@@ -101,8 +101,6 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
     }
     else if(cmd == "PRIVMSG")
         handlePrivmsg(fd, args);
-
-        
     // // else if(cmd == "PART")
     // //     handlePart(fd, args);
     // else if(cmd == "KICK")
