@@ -41,6 +41,7 @@ Client& Client::operator=(const Client &other)
     if(this != &other)
     {
         fd              = other.fd;
+        ip              = other.ip;
         nickname        = other.nickname;
         username        = other.username;
         realname        = other.realname;
@@ -118,3 +119,14 @@ void    Client::display()
 
 
 }
+
+void            Client::setIp(std::string newIp)
+{
+    ip = newIp;
+}
+
+std::string     Client::getIp() const
+{
+    return ip;
+}
+
