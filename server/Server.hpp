@@ -8,6 +8,7 @@
 #include <poll.h>
 #include <sstream>
 #include <ctime>
+#include <arpa/inet.h>
 #include "Channel.hpp"
 
 #define GREEN "\033[32m"
