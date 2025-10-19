@@ -46,6 +46,7 @@ public:
     int            GetFd();
     int            GetPort();
     std::string    GetPassword();
+    std::vector<Client> getClients();
 
     // bool    setNameServer(char c);
     void     setNameServer();
@@ -67,6 +68,7 @@ public:
     void    handleNick( int fd , std::vector<std::string> args);
     void    handleUser( int fd , std::vector<std::string> args);
     void    handlePrivmsg( int fd , std::vector<std::string> args);
+    void    BotClientPrivmsg( int fd , std::vector<std::string> args);
   
     void    cmdNotFound( int fd , std::string cmd );
 

@@ -138,3 +138,7 @@ std::string     Server::getCurrentTime()
     return  std::string(buffer);
 }
 
+std::vector<Client> Server::getClients()
+{
+    return clients;
+}
