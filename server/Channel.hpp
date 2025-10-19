@@ -2,7 +2,7 @@
 
 #include <map>
 #include <iostream>
-
+#include <stack>
 
 class Channel
 {
@@ -21,6 +21,15 @@ public:
     void removeUser(int fd)
     {
         users.erase(fd);
+    }
+    std::deque<int> getUsersFds()
+    {
+        std::deque<int> fds;
+        for (std::map<int, std::string>::iterator it = users.begin(); it != users.end(); ++it)
+        {
+            fds.push_back(it->first);
+        }
+        return fds;
     }
 };
 
