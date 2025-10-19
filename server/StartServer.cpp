@@ -66,9 +66,9 @@ void    Server::AcceptNewClient()
         close(clientFD);
         return;
     }
-    std::cout << "clientAddr.sin_addr ip = " << clientAddr.sin_addr.s_addr << std::endl;
+    // std::cout << "clientAddr.sin_addr ip = " << clientAddr.sin_addr.s_addr << std::endl;
     std::string clientip = inet_ntoa(clientAddr.sin_addr);
-    std::cout << "client ip = " << clientip << std::endl;
+    // std::cout << "client ip = " << clientip << std::endl;
 
     std::cout << GREEN << getCurrentTime() << " New client connected: fd = " << clientFD << RESET <<std::endl << std::endl;
 
