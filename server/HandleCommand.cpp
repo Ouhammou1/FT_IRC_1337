@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include "../chatbot/Chatbot.hpp"
 
 void        Server::handlePass( int fd , std::vector<std::string> args)
 {
@@ -95,6 +96,31 @@ void        Server::handleUser( int fd , std::vector<std::string> args)
         sendToClient(fd, ":" + GetName() + " 001 " + client->getNickname() + " :Welcome to the IRC Network " + client->getUsername()+ "!");
 }
 
+bool find_client(std::string arg, std::vector<Client> clients, Client &dest)
+{
+    for (size_t i = 0; i < clients.size(); i++)
+    {
+        if (arg.compare(clients[i].getNickname()) == 0)
+        {
+            dest = clients[i];
+            return true;
+        }
+    }
+    return false;
+}
+
+void        Server::BotClientPrivmsg( int fd , std::vector<std::string> args)
+{
+    Client *client = getClientByFd(fd);
+    Client dest;
+    if (args[0].compare("bot") == 0)
+        Chatbot::ident_cmd(args[1], fd, client->getNickname());
+    else if (find_client(args[0], this->clients, dest))
+        Chatbot::sendToDest(args, dest, *client);
+    else {
+        sendToClient(fd , ":" + GetName() + " 1337 " + client->getNickname() + " :There is no user with that nickname");
+    }
+}
 
 void        Server::cmdNotFound( int fd ,std::string cmd )
 {
