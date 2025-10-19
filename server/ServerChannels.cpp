@@ -15,7 +15,7 @@ bool Server::search_channels(std::string name)
 void        Server::handleJoin( int fd , std::vector<std::string> args)
 {
     std::cout << BLUE << getCurrentTime() << " Client " << fd << " issued JOIN command with args: " << std::endl;
-    if (args[0] == "#")
+    if (args[1][0] == '#')
     {
         sendToClient(fd, "461 JOIN :Not enough parameters. Usage: JOIN <channel> [key]");
         return;
@@ -100,8 +100,8 @@ void        Server::handlePrivmsg( int fd , std::vector<std::string> args)
         sendToClient(fd, "461 PRIVMSG :Not enough parameters. Usage: PRIVMSG <nickname|#channel> <message>");
         return;
     }
-    std::cout << BLUE << "arg[1] ="+args[1] << std::endl;
-    if (args[1][0] != '#')
+    std::cout << BLUE << "arg[1] ="+args[0] << RESET << std::endl;
+    if (args[0][0] == '#')
     {
         bool channelFound = false;
         for (size_t i = 0; i < this->channels.size(); i++)
@@ -143,7 +143,7 @@ void        Server::handlePrivmsg( int fd , std::vector<std::string> args)
     }
     else
     {
-        //handle private message to user
+        BotClientPrivmsg(fd, args);
     }
     
     Client *client = getClientByFd(fd);

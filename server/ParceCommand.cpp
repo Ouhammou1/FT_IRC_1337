@@ -96,7 +96,7 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
         return;
     if(cmd == "JOIN")
     {
-        // std::cout << "antoine" << std::endl;
+        std::cout << "antoine" << std::endl;
         handleJoin(fd, args);
     }
     else if(cmd == "PRIVMSG")
