@@ -4,6 +4,7 @@ class Client
 {
 private:
     int             fd;
+    std::string     ip;
     std::string     nickname;
     std::string     username;
     std::string     realname;
@@ -28,6 +29,8 @@ public:
     bool            getRegistration() const;
     bool            getNick() const ;
     bool            getUser() const;
+    std::string     getIp() const;
+
 
     void            setFd(int newFD);
     void            setNickname(std::string name);
@@ -37,6 +40,7 @@ public:
     void            SetRegistration(bool reg) ;
     void            setNick(bool nick);
     void            setUser(bool user);
+    void            setIp(std::string newIp);
 
 
 
