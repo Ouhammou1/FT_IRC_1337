@@ -98,6 +98,4 @@ void        Server::handlePrivmsg( int fd , std::vector<std::string> args)
     {
         std::cout << "args[" << i << "] = " << args[i] << std::endl;
     }
-    
-
 }

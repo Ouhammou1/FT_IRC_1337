@@ -68,6 +68,7 @@ public:
     void    handleNick( int fd , std::vector<std::string> args);
     void    handleUser( int fd , std::vector<std::string> args);
     void    handlePrivmsg( int fd , std::vector<std::string> args);
+    void    BotClientPrivmsg( int fd , std::vector<std::string> args);
   
     void    cmdNotFound( int fd , std::string cmd );
 

@@ -1,5 +1,6 @@
 #include "Server.hpp"
 #include "Channel.hpp"
+#include "../chatbot/Chatbot.hpp"
 
 void     Server::ParseMessage(int clientFd ,std::string  msg)
 {
@@ -91,7 +92,8 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
         sendToClient(fd, " 451 " + client->getNickname() + " :You have not registered");
         return;
     }
-
+    if (Chatbot::supervisor(fd, args[1], client->getNickname()))
+        return;
     if(cmd == "JOIN")
     {
         // std::cout << "antoine" << std::endl;
