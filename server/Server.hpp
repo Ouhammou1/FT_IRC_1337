@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include "Client.hpp"
 #include <vector>
@@ -85,13 +86,16 @@ public:
     std::string     getCurrentTime();
 
     //Youssef part channels
-    bool search_channels(std::string name);
-    void    handleJoin( int fd , std::vector<std::string> args);
+    bool     search_channels(std::string name);
+    void      handleJoin( int fd , std::vector<std::string> args);
+    void    handleKick( int fd , std::vector<std::string> args);
+    Channel* getChannelByName(std::string name);
+    Client* getClientByNickName(std::string nickname);
+    void    handleInvite( int fd , std::vector<std::string> args);
+    void    handleTopic( int fd , std::vector<std::string> args);
+    void    handleMode( int fd , std::vector<std::string> args);
+    void    sendNamesList(int fd, Channel *channel);
     // void    handlePart( int fd , std::vector<std::string> args);
-    // void    handleKick( int fd , std::vector<std::string> args);
-    // void    handleInvite( int fd , std::vector<std::string> args);
-    // void    handleTopic( int fd , std::vector<std::string> args);
-    // void    handleMode( int fd , std::vector<std::string> args);
     // void    handlePing( int fd , std::vector<std::string> args);
 };
 
