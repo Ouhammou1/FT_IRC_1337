@@ -15,11 +15,12 @@ bool Server::search_channels(std::string name)
 void        Server::handleJoin( int fd , std::vector<std::string> args)
 {
     std::cout << BLUE << getCurrentTime() << " Client " << fd << " issued JOIN command with args: " << std::endl;
-    if (args[1][0] == '#')
-    {
-        sendToClient(fd, "461 JOIN :Not enough parameters. Usage: JOIN <channel> [key]");
-        return;
-    }
+    // std::cout << RED << "args[0] "+ args[0] << std::endl;
+    // std::cout << GREEN << "args[0] "+ args[1] << std::endl;
+    // if (args[1][0] == '#')
+    // {
+    //     return;
+    // }
 
     int spaceCount = 0;
     for (size_t i = 0; i < args[1].size(); i++)
@@ -30,7 +31,8 @@ void        Server::handleJoin( int fd , std::vector<std::string> args)
     if (spaceCount > 0)
     {
         // std::cout << "spaceCount = " << spaceCount << std::endl;
-        sendToClient(fd, "451 * JOIN :Invalid format, too many parameters");
+        // sendToClient(fd, "451 * JOIN :Invalid format, too many parameters");
+        sendToClient(fd, "461 JOIN :Not enough parameters. Usage: JOIN <channel> [key]");
         return;
     }
 
@@ -142,16 +144,6 @@ void        Server::handlePrivmsg( int fd , std::vector<std::string> args)
         }
     }
     else
-    {
         BotClientPrivmsg(fd, args);
-    }
-    
-    Client *client = getClientByFd(fd);
-    sendToClient(fd , ":" + GetName() + " 1337 " + client->getNickname() + " :privmsg cmd it recived");
-    // (void)args;
-    for (size_t i = 0; i < args.size(); i++)
-    {
-        std::cout << "args[" << i << "] = " << args[i] << std::endl;
-    }
     
 }

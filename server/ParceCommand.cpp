@@ -84,23 +84,26 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
             return;
         }
         handleUser(fd, args);
-        
+        return;
     }
 
     if (client->getRegistration() == false ||  client->getNick() == false ||  client->getUser() == false)
     {
+        std::cout << "here" << std::endl;
         sendToClient(fd, " 451 " + client->getNickname() + " :You have not registered");
         return;
     }
-    if (Chatbot::supervisor(fd, args[1], client->getNickname()))
+    if (args.size() > 1 && Chatbot::supervisor(fd, args[1], client->getNickname()))
         return;
-    if(cmd == "JOIN")
+    else if(cmd == "JOIN")
     {
         std::cout << "antoine" << std::endl;
         handleJoin(fd, args);
     }
     else if(cmd == "PRIVMSG")
         handlePrivmsg(fd, args);
+    else if (cmd == "WHOIS")
+        handlewhois(fd,args);
     // // else if(cmd == "PART")
     // //     handlePart(fd, args);
     // else if(cmd == "KICK")
@@ -113,8 +116,8 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
     //     handleMode(fd, args);
     // // else if(cmd == "PING")
     // //     handlePing(fd, args);
-    // else
-    //     cmdNotFound(fd, cmd);
+    else
+        cmdNotFound(fd, cmd);
 
     // client->display();
 }
