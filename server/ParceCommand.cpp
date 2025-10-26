@@ -84,11 +84,12 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
             return;
         }
         handleUser(fd, args);
-        
+        return;
     }
 
     if (client->getRegistration() == false ||  client->getNick() == false ||  client->getUser() == false)
     {
+        std::cout << "here" << std::endl;
         sendToClient(fd, " 451 " + client->getNickname() + " :You have not registered");
         return;
     }
@@ -104,6 +105,8 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
     }
     else if(cmd == "PRIVMSG")
         handlePrivmsg(fd, args);
+    else if (cmd == "WHOIS")
+        handlewhois(fd,args);
     else if(cmd == "KICK")
         handleKick(fd, args);
     else if(cmd == "INVITE")
