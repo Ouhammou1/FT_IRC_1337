@@ -1,5 +1,6 @@
 #include "Server.hpp"
 #include "../chatbot/Chatbot.hpp"
+#include <fstream> 
 
 void        Server::handlePass( int fd , std::vector<std::string> args)
 {
@@ -88,12 +89,13 @@ void        Server::handleUser( int fd , std::vector<std::string> args)
     
     client->setUsername(args[0]);
     client->setRealname(realname);
-    std::cout << " realNmae(args) " << realname << std::endl;
     client->setUser(true);
     std::cout << YELLOW << getCurrentTime() << " Client " << fd << " registered with username: "  << args[0] << " and realname: " << realname << RESET<< std::endl;
     
     if(client->getUser() == true )
+    {
         sendToClient(fd, ":" + GetName() + " 001 " + client->getNickname() + " :Welcome to the IRC Network " + client->getUsername()+ "!");
+    }
 }
 
 bool find_client(std::string arg, std::vector<Client> clients, Client &dest)
@@ -115,24 +117,59 @@ void        Server::BotClientPrivmsg( int fd , std::vector<std::string> args)
     Client dest;
     if (args[0].compare("bot") == 0)
         Chatbot::ident_cmd(args[1], fd, client->getNickname());
+    else if (args[0].compare("NickServ") == 0)
+        return;
     else if (find_client(args[0], this->clients, dest))
         Chatbot::sendToDest(args, dest, *client);
     else {
-        sendToClient(fd , ":" + GetName() + " 1337 " + client->getNickname() + " :There is no user with that nickname");
+        sendToClient(fd , ":" + GetName() + " 401 " + client->getNickname() + " " + args[0] + " :No such nick/channel");
+        sendToClient(fd, ":" + GetName() + " NOTICE " + client->getNickname() + " :*** User " + args[0] + " is not online");
     }
 }
 
 void        Server::cmdNotFound( int fd ,std::string cmd )
 {
-
     Client *client = getClientByFd(fd);
     if(!client)
         return ;
-    
-    if(cmd == "PASS")
-        return;
-
     std::cout << getCurrentTime() <<  " Unknown command '" << cmd << "' from client " << fd << std::endl;
-    sendToClient(fd, " 421 " + client->getNickname() + " " + cmd + " :Unknown command");
+    sendToClient(fd, ":" + GetName() + " 421 " + client->getNickname() + " " + cmd + " :Unknown command");
 }
 
+void Server::handlewhois(int fd , std::vector<std::string> args)
+{
+    Client *client = getClientByFd(fd);
+    if(!client)
+        return ;
+    for (size_t i = 0; i < args.size(); i++)
+    {
+        std::cout << args[i] << std::endl;
+    }
+    if(args.empty() || args[0].empty())
+    {
+        sendToClient(fd, ":" + GetName() + " 431 " + client->getNickname() + " :No nickname given");
+        return;
+    }
+    
+    // Find the target client
+    Client *target = NULL;
+    std::vector<Client> clients = getClients();
+    for (size_t i = 0; i < clients.size(); i++)
+    {
+        if (clients[i].getNickname() == args[0])
+        {
+            target = &clients[i];
+            break;
+        }
+    }
+    
+    if(!target)
+    {
+        sendToClient(fd, ":" + GetName() + " 401 " + client->getNickname() + " " + args[0] + " :No such nick/channel");
+        return;
+    }
+    sendToClient(fd, ":" + GetName() + " 311 " + client->getNickname() + " " + 
+                 target->getNickname() + " " + target->getUsername() + " " + 
+                 target->getIp() + " * :" + target->getRealname());
+    std::cout << target->getRealname() << std::endl;
+}

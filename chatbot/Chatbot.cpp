@@ -2,7 +2,7 @@
 
 void Chatbot::help(int fd, const std::string & name)
 {
-    std::string msg = ":bot PRIVMSG " + name + " :Available commands: HELP, HOUR, CALCUL\r\n";
+    std::string msg = ":bot PRIVMSG " + name + " :Available commands: CALCUL(ex:CALCUL A+B-C*D/E), HELP, HOUR\r\n";
     send(fd , msg.c_str() , msg.length() , 0);
 }
 void Chatbot::hour(int fd, const std::string &name)
@@ -127,15 +127,16 @@ bool op_form(std::string str)
 }
 void Chatbot::calculator(int fd, std::string arg, const std::string &name)
 {
-    std::size_t pos = arg.find("CALCUL") + 7;
-    std::string str = arg.substr(pos);
+    // std::size_t pos = arg.find("CALCUL") + 7;
+    // std::cout << pos << std::endl;
+    std::string str = arg.substr(7);
     std::vector<std::string> oper;
     std::string res;
     std::string msg;
     int i = 0;
     if (!op_form(str))
     {
-        msg = ":bot PRIVMSG " + name + " :Bravo 👏 you overlap your IQ score\r\n";
+        msg = ":bot PRIVMSG " + name + " :Bravo 👏 you overlap your IQ score \r\n";
         send(fd, msg.c_str(), msg.length(), 0);
         return;
     }
@@ -151,16 +152,22 @@ void Chatbot::calculator(int fd, std::string arg, const std::string &name)
 void Chatbot::ident_cmd(std::string arg, int fd, const std::string &client_name)
 {
     std::size_t pos = arg.find("CALCUL");
+    std::size_t pos2 = arg.find("calcul");
     std::string calcul;
     if (pos != std::string::npos)
     {
         calcul = arg.substr(pos, 6);
     }
-    if (arg == "HELP")
+    else if (pos2 != std::string::npos)
+    {
+        calcul = arg.substr(pos2, 6);
+    }
+    
+    if (arg == "HELP" || arg == "help")
         help(fd, client_name);
-    else if (arg == "HOUR")
+    else if (arg == "HOUR" || arg == "hour")
         hour(fd, client_name);
-    else if (calcul == "CALCUL")
+    else if (calcul == "CALCUL" || calcul == "calcul")
         calculator(fd ,arg, client_name);
     else
     {
@@ -189,7 +196,8 @@ bool Chatbot::supervisor(int fd, std::string args , const std::string &name)
     curses.push_back("qvpx");
     curses.push_back("chffl");
     curses.push_back("avttn");
-    curses.push_back("nff");
+    curses.push_back("ovgpu");
+    curses.push_back("avttre");
     for (size_t i = 0; i < curses.size(); i++)
     {
         if (args.find(rot13(curses[i])) != std::string::npos)
