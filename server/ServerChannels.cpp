@@ -531,6 +531,11 @@ void    Server::handleMode( int fd , std::vector<std::string> args)
 					paramIndex++;
 					continue;
 				}
+				if (channel->SizeGetOperator() == 1)
+				{
+					sendToClient(fd,"461 " + client->getNickname() + " channel shoul have aat least one operator");
+					return ;
+				}
 				channel->removeOperator(targetUser->getFd());
 				appliedModes += "-o";
 				modeParams += " " + args[paramIndex];

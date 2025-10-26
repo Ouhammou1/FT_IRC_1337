@@ -25,6 +25,7 @@ public:
     void addUser(int fd, std::string nickname){ this->users[fd] = nickname;};
     bool isUserInChannel(int fd){return users.find(fd) != users.end();};
     void addOperator(int fd){this->operators.insert(fd);};
+    size_t SizeGetOperator(){return this->operators.size();};
     void addInvited_user(int fd){this->invited_users.insert(fd);};
     void removeUser(int fd)
     {
