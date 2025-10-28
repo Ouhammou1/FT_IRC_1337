@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <algorithm>
 #include <sys/socket.h>
 #include "../server/Client.hpp"
 
@@ -15,5 +16,4 @@ class Chatbot
     static void calculator(int fd, std::string arg , const std::string &name);
     static bool supervisor(int fd, std::string arg , const std::string &name);
     static void sendToDest(std::vector<std::string>  args,Client dest, Client sender);
-    static bool handlewhois(int fd, std::string arg , const std::string &name);
 };

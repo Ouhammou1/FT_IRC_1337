@@ -21,11 +21,17 @@ void Chatbot::hour(int fd, const std::string &name)
 std::string pars_op(std::string str , int *pos)
 {
     std::string res;
-    if (str[(*pos)] == '*' || str[(*pos)] == '+' ||str[(*pos)] == '-' ||str[(*pos)] == '/')
+    if ((*(pos) != 0 && (str[(*pos) -1] != '/' && str[(*pos) -1] != '*' && str[(*pos) -1] != '-' && str[(*pos) -1] != '+')) 
+        && (str[(*pos)] == '*' || ( (str[(*pos)] == '+' || str[(*pos)] == '-') && *(pos) != 0) || str[(*pos)] == '/'))
     {
         res = str.substr((*pos),1);
         (*pos)++;
         return res;
+    }
+    if (str[(*pos)] == '+' || str[(*pos)] == '-')
+    {
+        res.push_back(str[(*pos)]);
+        (*pos)++;
     }
     while (isdigit(str[(*pos)]))
     {
@@ -34,22 +40,47 @@ std::string pars_op(std::string str , int *pos)
     }
     return res;
 }
+std::string ft_itoi(int nbr)
+{
+    std::string res;
+    bool ng = false;
+    if (nbr < 0)
+    {
+        ng = true;
+        nbr *= -1;
+    }
+    if (nbr == 0)
+    {
+        res.push_back('0');
+        return res;
+    }
+    while (nbr / 10 != 0)
+    {
+        res.push_back((nbr % 10) + '0');
+        nbr /= 10;
+    }
+    res.push_back(nbr + '0');
+    if (ng)
+        res.push_back('-');
+    std::reverse(res.begin(), res.end());
+    return res;
+}
 std::string calcul(int n1, int n2, int op)
 {
     std::string res;
     switch (op)
     {
     case '*':
-            res = std::to_string(n1 * n2);
+            res = ft_itoi(n1 * n2);
         break;
     case '+':
-        res = std::to_string(n1 + n2);
+        res = ft_itoi(n1 + n2);
         break;
     case '-':
-        res = std::to_string(n1 - n2);
+        res = ft_itoi(n1 - n2);
         break;
     case '/':
-        res = std::to_string(n1 / n2);
+        res = ft_itoi(n1 / n2);
         break;
     default:
         break;
@@ -114,34 +145,40 @@ bool op_form(std::string str)
     {
         if (!isdigit(str[i]) && (str[i] != '*' && str[i] != '+' && str[i] != '-' && str[i] != '/'))
             return false;
-        if (str[i] == '*' || str[i] == '+' || str[i] == '-' || str[i] == '/')
+        if (str[i] == '*' || str[i] == '/' || str[i] == '-' || str[i] == '+')
         {
-            if (i + 1 < str.size() && (str[i+1] == '*' || str[i+1] == '+' || str[i+1] == '-' || str[i+1] == '/'))
+            if (i + 1 < str.size() && (str[i+1] == '*' || str[i+1] == '/'))
                 return false;
         }
-        if (str[i] == '/' && (i + 1 < str.size() && str[i] != '0'))
+        if (str[i] == '/' && (i + 1 < str.size() && str[i+1] == '0'))
             return false;
-        }
-
+        if (str[str.size()-1] == '*' || str[str.size()-1] == '/' || str[str.size()-1] == '-' || str[str.size()-1] == '+')
+            return false;
+    }
     return true;
 }
 void Chatbot::calculator(int fd, std::string arg, const std::string &name)
 {
-    // std::size_t pos = arg.find("CALCUL") + 7;
-    // std::cout << pos << std::endl;
     std::string str = arg.substr(7);
     std::vector<std::string> oper;
     std::string res;
     std::string msg;
     int i = 0;
-    if (!op_form(str))
+    if ( arg.size() <= 6 || !op_form(str))
     {
-        msg = ":bot PRIVMSG " + name + " :Bravo 👏 you overlap your IQ score \r\n";
+        std::cout << str <<std::endl;
+        msg = ":bot PRIVMSG " + name + " :Bravo you overlap your IQ score \r\n";
         send(fd, msg.c_str(), msg.length(), 0);
         return;
     }
     while ((size_t)i < str.size())
         oper.push_back(pars_op(str, &i));
+    if (oper.size() < 3)
+    {
+        msg = ":bot PRIVMSG " + name + " :ex:CALCUL A+B-C*D/E \r\n";
+        send(fd, msg.c_str(), msg.length(), 0);
+        return;
+    }
     arith(oper);
     int n1 = std::atoi(oper[0].c_str());
     int n2 = std::atoi(oper[2].c_str());
@@ -162,12 +199,11 @@ void Chatbot::ident_cmd(std::string arg, int fd, const std::string &client_name)
     {
         calcul = arg.substr(pos2, 6);
     }
-    
     if (arg == "HELP" || arg == "help")
         help(fd, client_name);
     else if (arg == "HOUR" || arg == "hour")
         hour(fd, client_name);
-    else if (calcul == "CALCUL" || calcul == "calcul")
+    else if (arg.size() > 9 && (calcul == "CALCUL" || calcul == "calcul"))
         calculator(fd ,arg, client_name);
     else
     {
