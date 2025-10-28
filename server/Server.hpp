@@ -96,6 +96,7 @@ public:
     void    handleTopic( int fd , std::vector<std::string> args);
     void    handleMode( int fd , std::vector<std::string> args);
     void    sendNamesList(int fd, Channel *channel);
+    void    lowrStr(std::string &str);
     // void    handlePart( int fd , std::vector<std::string> args);
     // void    handlePing( int fd , std::vector<std::string> args);
 };
