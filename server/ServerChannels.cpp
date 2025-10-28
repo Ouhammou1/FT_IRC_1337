@@ -321,11 +321,13 @@ void Server::handleInvite(int fd, std::vector<std::string> args)
 void Server::handleTopic(int fd, std::vector<std::string> args)
 {
 	Client *client = getClientByFd(fd);
-	if (args.empty())
+	if (args.empty() || args.size() == 0)
 	{
+		// std::cout << "thinnnnnnnnnnnk" << std::endl;
 		sendToClient(fd, "461 " + client->getNickname() + " TOPIC :Not enough parameters");
 		return;
 	}
+	// std::cout << "th20202020022020" << std::endl;
 	lowrStr(args[0]);
 	// std::transform(args[0].begin(), args[0].end(), args[0].begin(), ::tolower);
 	std::string newarg = args[0];
