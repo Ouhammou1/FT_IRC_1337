@@ -89,7 +89,7 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
 
     if (client->getRegistration() == false ||  client->getNick() == false ||  client->getUser() == false)
     {
-        std::cout << "here" << std::endl;
+        // std::cout << "here123" << std::endl;
         sendToClient(fd, " 451 " + client->getNickname() + " :You have not registered");
         return;
     }
