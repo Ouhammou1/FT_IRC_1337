@@ -9,8 +9,7 @@ void     Server::ParseMessage(int clientFd ,std::string  msg)
 
     std::istringstream mes(msg);
     std::string word;
-    std::vector<std::string> parts;
-
+    std::vector<std::string> parts;    
 
     while (mes >> word && !word.empty())
     {

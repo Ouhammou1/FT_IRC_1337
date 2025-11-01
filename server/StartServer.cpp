@@ -103,18 +103,38 @@ void    Server::ReceiveNewData(int clientFd)
         std::cout << getCurrentTime() << " Receied from client connected: fd = " << clientFd  << ": " << buffer ; 
 
 
-        std::string data(buffer);
-        std::istringstream stream(data);
-        std::string line ;
+    Client *client = getClientByFd(clientFd);
+    if(!client)
+        return ;
+    
+    client->appendBuffer(buffer);
 
-        while (std::getline(stream , line))
+
+    std::string clientBuffer = client->getBuffer();
+    size_t pos;
+
+
+
+        while ((pos = clientBuffer.find('\n')) != std::string::npos )
         {
+
+            std::string line  = clientBuffer.substr(0, pos);
+
             if(!line.empty() && line.back() == '\r')
                 line.pop_back();
             
             if(!line.empty())
                 ParseMessage(clientFd , line);
+
+            clientBuffer.erase(0, pos + 1);
         }
+        client->setBuffer(clientBuffer);
+        if(client->getBuffer().size() > 512)
+        {
+            std::cout << getCurrentTime() << " Buffer overflow from client " ; 
+            client->getBuffer().clear();
+        }
+
     }
 }
 
