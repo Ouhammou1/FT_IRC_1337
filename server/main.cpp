@@ -37,7 +37,7 @@ int main(int ac , char **av)
             throw std::invalid_argument("Port must be a numeric value");
     
         server.setNameServer();
-        // signal(SIGINT , Server::SignalHandel);
+        signal(SIGINT , Server::SignalHandel);
         signal(SIGQUIT , Server::SignalHandel);
         server.SetPort(str);
         server.SetPassword(password);

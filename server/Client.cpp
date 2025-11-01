@@ -56,6 +56,12 @@ Client::~Client()
 {
 }
 
+void    Client::setBoolian()
+{
+    SetRegistration(false);
+    setNick(false);
+    setUser(false);
+}
 
 bool     Client::getRegistration() const 
 {

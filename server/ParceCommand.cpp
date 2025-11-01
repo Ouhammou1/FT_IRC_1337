@@ -47,9 +47,14 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
     std::cout << getCurrentTime() << " Handling command: " << cmd << " from client fd = " << fd << std::endl << std::endl;
 
     Client *client = getClientByFd(fd);
-    // Channel *chan(&Client);
     if(client == NULL)
         return;
+
+    if(cmd == "CAP")
+    {
+        sendToClient(fd, " 462 " + client->getNickname() + " :CAP CAP CAP CAP CAP CAP ===");
+        return ;
+    }
 
     if (cmd == "PASS")
     {
@@ -62,22 +67,12 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
 
     if (cmd == "NICK")
     {
-        if(client->getRegistration() == false)
-        {
-            sendToClient(fd, " 451 * PASS:You have not registered");
-            return;
-        }
         handleNick(fd, args);
         return;
     }
 
     if(cmd == "USER")
     {
-        if(client->getRegistration() == false)
-        {
-            sendToClient(fd, " 451 * PASS:You have not registered");
-            return;
-        }
         if(client->getNick() == false)
         {
             sendToClient(fd, " 451 * NICK:You must set a nickname first");
@@ -89,7 +84,6 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
 
     if (client->getRegistration() == false ||  client->getNick() == false ||  client->getUser() == false)
     {
-        // std::cout << "here123" << std::endl;
         sendToClient(fd, " 451 " + client->getNickname() + " :You have not registered");
         return;
     }
@@ -115,12 +109,8 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
         handleTopic(fd, args);
     else if(cmd == "MODE")
         handleMode(fd, args);
-    // // else if(cmd == "PING")
-    // //     handlePing(fd, args);
+
     else
         cmdNotFound(fd, cmd);
 
-    // client->display();
 }
-
-// void Server::handleJoin()

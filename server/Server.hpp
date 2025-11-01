@@ -45,9 +45,9 @@ public:
     void    SetPort(std::string& str);
     void    SetPassword(std::string password);
 
-    int            GetFd();
-    int            GetPort();
-    std::string    GetPassword();
+    int                 GetFd();
+    int                 GetPort();
+    std::string         GetPassword();
     std::vector<Client> getClients();
 
     // bool    setNameServer(char c);
@@ -81,12 +81,12 @@ public:
 
 
 
-    void        sendToClient(int fd, const std::string& message);
-    void        RemoveClinet(int fd);
+    void            sendToClient(int fd, const std::string& message);
+    void            RemoveClinet(int fd);
 
     std::string     getCurrentTime();
 
-    //Youssef part channels
+
     bool     search_channels(std::string name);
     void      handleJoin( int fd , std::vector<std::string> args);
     void    handleKick( int fd , std::vector<std::string> args);
@@ -97,8 +97,9 @@ public:
     void    handleMode( int fd , std::vector<std::string> args);
     void    sendNamesList(int fd, Channel *channel);
     void    lowrStr(std::string &str);
-    // void    handlePart( int fd , std::vector<std::string> args);
-    // void    handlePing( int fd , std::vector<std::string> args);
+
+
+
 };
 
 

@@ -19,7 +19,7 @@ public:
     Client& operator=(const Client &other);
     ~Client();
 
-
+    void    setBoolian();
 
     int             getFd() const;
     std::string     getNickname() const;
