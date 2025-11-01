@@ -7,6 +7,7 @@ void     Server::ParseMessage(int clientFd ,std::string  msg)
     if(msg.empty())
         return;
 
+
     std::istringstream mes(msg);
     std::string word;
     std::vector<std::string> parts;    
@@ -30,9 +31,11 @@ void     Server::ParseMessage(int clientFd ,std::string  msg)
     if (parts.empty())
         return ;
     
+
     std::string cmd = parts[0];
     std::transform(cmd.begin() , cmd.end() , cmd.begin() , ::toupper);
 
+    //lowrStr
     std::vector<std::string> parameters(parts.begin() + 1, parts.end());    
     HandleCommand(clientFd , cmd , parameters);
 
@@ -50,11 +53,7 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
         return;
 
     if(cmd == "CAP")
-    {
-        sendToClient(fd, " 462 " + client->getNickname() + " :CAP CAP CAP CAP CAP CAP ===");
         return ;
-    }
-
     if (cmd == "PASS")
     {
         if(client->getRegistration() == true)

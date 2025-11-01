@@ -109,17 +109,16 @@ void    Server::ReceiveNewData(int clientFd)
     
     client->appendBuffer(buffer);
 
+    
+
 
     std::string clientBuffer = client->getBuffer();
     size_t pos;
 
-
-
         while ((pos = clientBuffer.find('\n')) != std::string::npos )
         {
-
             std::string line  = clientBuffer.substr(0, pos);
-
+            
             if(!line.empty() && line.back() == '\r')
                 line.pop_back();
             
@@ -131,10 +130,9 @@ void    Server::ReceiveNewData(int clientFd)
         client->setBuffer(clientBuffer);
         if(client->getBuffer().size() > 512)
         {
-            std::cout << getCurrentTime() << " Buffer overflow from client " ; 
+            std::cout << getCurrentTime() << " Buffer overflow from client " << std::endl; 
             client->getBuffer().clear();
         }
-
     }
 }
 
