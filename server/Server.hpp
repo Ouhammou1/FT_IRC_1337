@@ -12,6 +12,7 @@
 #include <arpa/inet.h>
 #include <cstdio>
 #include <cstring>
+#include <cstdlib>
 #include "Channel.hpp"
 
 #define GREEN "\033[32m"

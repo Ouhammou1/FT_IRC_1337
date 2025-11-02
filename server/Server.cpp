@@ -17,13 +17,8 @@ int    Server::GetFd()
 
 void    Server::SetPort(std::string& str)
 {
-    std::stringstream ss(str);
-    int nbr = 0;
 
-    ss >> nbr;
-    if(ss.fail())
-        throw "Conversion failed for string: " ;
-    port = nbr;
+    port = (std::atoi(str.c_str()));
     // std::cout << "Port " << port << std::endl;
 }
 
@@ -118,7 +113,6 @@ void    Server::RemoveClinet(int fd)
         }
     }
     
-    // Client *client = getClientByFd(fd);
     for (size_t i = 0; i < channels.size(); i++)
     {
         channels[i].removeUser(fd);

@@ -8,7 +8,7 @@ void        Server::handlePass( int fd , std::vector<std::string> args)
     if(client == NULL)
         return ;
 
-    if(args.empty() ||  args[0].empty())
+    if(args.empty() ||  args[0].empty() || args.size() != 1)
     {
         sendToClient(fd, " 461 * PASS :Not enough parameters");
         return;
@@ -33,7 +33,7 @@ void    Server::handleNick( int fd , std::vector<std::string> args)
     if(client == NULL)
         return ;
 
-    if(args.empty() ||  args[0].empty())
+    if(args.empty() ||  args[0].empty() || args.size() != 1 )
     {
         sendToClient(fd, " 461 * NICK :Not enough parameters");
         return;
@@ -78,7 +78,7 @@ void        Server::handleUser( int fd , std::vector<std::string> args)
         return;
     }
 
-    if(args.size() < 4)
+    if(args.size() != 4)
     {
         sendToClient(fd, " 461 " + client->getNickname() + " USER :Not enough parameters");
         return;
