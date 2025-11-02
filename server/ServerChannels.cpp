@@ -16,7 +16,12 @@ bool Server::search_channels(std::string name)
 void        Server::handleJoin( int fd , std::vector<std::string> args)
 {
 	std::cout << BLUE << getCurrentTime() << " Client " << fd << " issued JOIN command with args: " << std::endl;
-	if (args[0].empty() || args[0].size() == 1 || args[0].find(' ') != std::string::npos ||
+	if (args.empty() || args.size() == 0)
+	{
+		sendToClient(fd, "461 JOIN :Not enough parameters");
+        return;
+	}
+	if ( args[0].empty() || args[0].size() == 1 || args[0].find(' ') != std::string::npos ||
 	args[0].find(',') != std::string::npos || args[0][0] != '#')
 	{
 		sendToClient(fd, "476 " + args[0] + " :Bad Channel Mask");
@@ -36,7 +41,7 @@ void        Server::handleJoin( int fd , std::vector<std::string> args)
 		Channel newChannel(args[0]);
 		newChannel.addOperator(client->getFd());
 		this->channels.push_back(newChannel);
-		if (!args[1].empty())
+		if (!args[1].empty() && args.size() > 1)
 		{
 			std::cout << "Setting password for channel " << args[0] << " to " << args[1] << std::endl;
 			this->channels.back().setPassword(args[1]);
@@ -133,7 +138,6 @@ void        Server::handlePrivmsg( int fd , std::vector<std::string> args)
 		return;
 	}
 	lowrStr(args[0]);
-	std::cout << BLUE << "arg[0] ="+args[0] << RESET << std::endl;
 	if (args[0][0] == '#')
 	{
 		bool channelFound = false;

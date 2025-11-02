@@ -140,10 +140,6 @@ void Server::handlewhois(int fd , std::vector<std::string> args)
     Client *client = getClientByFd(fd);
     if(!client)
         return ;
-    for (size_t i = 0; i < args.size(); i++)
-    {
-        std::cout << args[i] << std::endl;
-    }
     if(args.empty() || args[0].empty())
     {
         sendToClient(fd, ":" + GetName() + " 431 " + client->getNickname() + " :No nickname given");

@@ -91,8 +91,8 @@ void    Server::ReceiveNewData(int clientFd)
     {
         if(bytRead == 0)
             std::cout << getCurrentTime() << " Client " << clientFd << " disconnected." << std::endl;
-        else
-            perror("recv() failed ");
+        // else
+        //     perror("recv() failed ");
         RemoveClinet(clientFd);
         close(clientFd);
     }

@@ -17,10 +17,13 @@ bool PortNumber(std::string &str)
 }
 
 
-
+// void ft_at(void)
+// {
+//     system("leaks ircserv");
+// }
 int main(int ac , char **av)
 {
-
+    // atexit(ft_at);
     if(ac != 3)
     {
         std::cout <<  "Invalid argument. Usage: " <<av[0] << " <PORT> <PASSWORD>"  << std::endl ;
