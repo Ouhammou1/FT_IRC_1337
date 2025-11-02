@@ -7,10 +7,10 @@ void     Server::ParseMessage(int clientFd ,std::string  msg)
     if(msg.empty())
         return;
 
+
     std::istringstream mes(msg);
     std::string word;
-    std::vector<std::string> parts;
-
+    std::vector<std::string> parts;    
 
     while (mes >> word && !word.empty())
     {
@@ -31,9 +31,11 @@ void     Server::ParseMessage(int clientFd ,std::string  msg)
     if (parts.empty())
         return ;
     
+
     std::string cmd = parts[0];
     std::transform(cmd.begin() , cmd.end() , cmd.begin() , ::toupper);
 
+    //lowrStr
     std::vector<std::string> parameters(parts.begin() + 1, parts.end());    
     HandleCommand(clientFd , cmd , parameters);
 
@@ -47,10 +49,11 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
     std::cout << getCurrentTime() << " Handling command: " << cmd << " from client fd = " << fd << std::endl << std::endl;
 
     Client *client = getClientByFd(fd);
-    // Channel *chan(&Client);
     if(client == NULL)
         return;
 
+    if(cmd == "CAP")
+        return ;
     if (cmd == "PASS")
     {
         if(client->getRegistration() == true)
@@ -62,22 +65,12 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
 
     if (cmd == "NICK")
     {
-        if(client->getRegistration() == false)
-        {
-            sendToClient(fd, " 451 * PASS:You have not registered");
-            return;
-        }
         handleNick(fd, args);
         return;
     }
 
     if(cmd == "USER")
     {
-        if(client->getRegistration() == false)
-        {
-            sendToClient(fd, " 451 * PASS:You have not registered");
-            return;
-        }
         if(client->getNick() == false)
         {
             sendToClient(fd, " 451 * NICK:You must set a nickname first");
@@ -89,7 +82,6 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
 
     if (client->getRegistration() == false ||  client->getNick() == false ||  client->getUser() == false)
     {
-        // std::cout << "here123" << std::endl;
         sendToClient(fd, " 451 " + client->getNickname() + " :You have not registered");
         return;
     }
@@ -115,12 +107,8 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
         handleTopic(fd, args);
     else if(cmd == "MODE")
         handleMode(fd, args);
-    // // else if(cmd == "PING")
-    // //     handlePing(fd, args);
+
     else
         cmdNotFound(fd, cmd);
 
-    // client->display();
 }
-
-// void Server::handleJoin()

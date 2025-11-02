@@ -56,6 +56,12 @@ Client::~Client()
 {
 }
 
+void    Client::setBoolian()
+{
+    SetRegistration(false);
+    setNick(false);
+    setUser(false);
+}
 
 bool     Client::getRegistration() const 
 {
@@ -130,3 +136,20 @@ std::string     Client::getIp() const
     return ip;
 }
 
+
+
+void            Client::setBuffer( std::string str)
+{
+    buffer = str;
+}
+
+std::string     Client::getBuffer()const
+{
+    return buffer;
+}
+
+
+void        Client::appendBuffer(std::string data)
+{
+    buffer.append(data);
+}

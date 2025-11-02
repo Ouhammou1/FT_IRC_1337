@@ -81,7 +81,6 @@ void        Server::handleUser( int fd , std::vector<std::string> args)
     {
         if(clients[i].getUsername() == args[0])
         {
-            clients[i].display();
             sendToClient(fd , ":" + GetName() + " " + client->getNickname() + " USER exists ");
             return;
         }

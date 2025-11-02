@@ -11,6 +11,7 @@ private:
     bool            registration;
     bool            nick;
     bool            user;
+    std::string     buffer;
 
 public:
     Client();
@@ -19,29 +20,31 @@ public:
     Client& operator=(const Client &other);
     ~Client();
 
-
+    void    setBoolian();
 
     int             getFd() const;
     std::string     getNickname() const;
     std::string     getUsername() const;
     std::string     getRealname() const;
-
     bool            getRegistration() const;
     bool            getNick() const ;
     bool            getUser() const;
     std::string     getIp() const;
+    std::string     getBuffer()const;
 
 
     void            setFd(int newFD);
     void            setNickname(std::string name);
     void            setUsername(std::string name);
     void            setRealname(std::string name);
-
     void            SetRegistration(bool reg) ;
     void            setNick(bool nick);
     void            setUser(bool user);
     void            setIp(std::string newIp);
+    void            setBuffer( std::string buffer);
 
+
+    void        appendBuffer(std::string data);
 
 
     void    display();

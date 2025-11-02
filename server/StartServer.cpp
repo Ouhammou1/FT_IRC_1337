@@ -11,7 +11,6 @@ void    Server::CreateSocket()
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port=htons(GetPort());
 
-    // printf("address.sin_port = %d \n" , address.sin_port);
 
     fd = socket(AF_INET , SOCK_STREAM , 0);
     if(fd == -1)
@@ -66,15 +65,14 @@ void    Server::AcceptNewClient()
         close(clientFD);
         return;
     }
-    // std::cout << "clientAddr.sin_addr ip = " << clientAddr.sin_addr.s_addr << std::endl;
-    std::string clientip = inet_ntoa(clientAddr.sin_addr);
-    // std::cout << "client ip = " << clientip << std::endl;
 
+    std::string clientip = inet_ntoa(clientAddr.sin_addr);
     std::cout << GREEN << getCurrentTime() << " New client connected: fd = " << clientFD << RESET <<std::endl << std::endl;
 
 
     newClient.setFd(clientFD);
     newClient.setIp(clientip);
+    newClient.setBoolian();
     clients.push_back(newClient);
 
     mypollfd.fd = clientFD;
@@ -105,21 +103,36 @@ void    Server::ReceiveNewData(int clientFd)
         std::cout << getCurrentTime() << " Receied from client connected: fd = " << clientFd  << ": " << buffer ; 
 
 
-        std::string data(buffer);
-        std::istringstream stream(data);
-        std::string line ;
+    Client *client = getClientByFd(clientFd);
+    if(!client)
+        return ;
+    
+    client->appendBuffer(buffer);
 
-        while (std::getline(stream , line))
+    
+
+
+    std::string clientBuffer = client->getBuffer();
+    size_t pos;
+
+        while ((pos = clientBuffer.find('\n')) != std::string::npos )
         {
+            std::string line  = clientBuffer.substr(0, pos);
+            
             if(!line.empty() && line.back() == '\r')
                 line.pop_back();
-            // std::cout  << "Line :" << line << std::endl;
             
             if(!line.empty())
                 ParseMessage(clientFd , line);
+
+            clientBuffer.erase(0, pos + 1);
         }
-        
-        // send(clientFd , buffer , bytRead, 0);
+        client->setBuffer(clientBuffer);
+        if(client->getBuffer().size() > 512)
+        {
+            std::cout << getCurrentTime() << " Buffer overflow from client " << std::endl; 
+            client->getBuffer().clear();
+        }
     }
 }
 
