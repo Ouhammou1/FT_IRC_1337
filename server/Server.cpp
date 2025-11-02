@@ -117,6 +117,14 @@ void    Server::RemoveClinet(int fd)
             break;
         }
     }
+    
+    // Client *client = getClientByFd(fd);
+    for (size_t i = 0; i < channels.size(); i++)
+    {
+        channels[i].removeUser(fd);
+        channels[i].removeOperator(fd);
+    }
+    
     for (size_t i = 0; i < clients.size(); i++)
     {
         if(clients[i].getFd() == fd)
@@ -126,8 +134,6 @@ void    Server::RemoveClinet(int fd)
         }
     }
 }
-
-
 
 std::string     Server::getCurrentTime()
 {

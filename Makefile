@@ -26,7 +26,7 @@ re : fclean all
 
 
 
-PORT ?= 9001
+PORT ?= 9000
 PASS ?= MYPASS
 
 run: all clean

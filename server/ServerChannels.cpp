@@ -48,7 +48,7 @@ void        Server::handleJoin( int fd , std::vector<std::string> args)
 	{
 		if (this->channels[i].getnimo() == args[0])
 		{
-			if (!this->channels[i].isUserInChannel(client->getFd()))
+			if (!this->channels[i].isSearchBynickName(client->getNickname()))
 			{
 				if (this->channels[i].getLimit() > 0 && this->channels[i].getUsersFds().size() >= static_cast<size_t>(this->channels[i].getLimit()))
                 {
@@ -126,6 +126,7 @@ int serachClientsByNickname(std::vector<Client> &clients, std::string nickname)
 
 void        Server::handlePrivmsg( int fd , std::vector<std::string> args)
 {
+	Client *clien = getClientByFd(fd);
 	if(args.size() < 2 || args[0].empty() || args[1].empty())
 	{
 		sendToClient(fd, "461 PRIVMSG :Not enough parameters");
@@ -143,7 +144,7 @@ void        Server::handlePrivmsg( int fd , std::vector<std::string> args)
 				if (this->channels[i].getnimo() == args[0])
 				{
 					channelFound = true;
-					if (!this->channels[i].isUserInChannel(fd))
+					if (!this->channels[i].isSearchBynickName(clien->getNickname()))
 					{
 						sendToClient(fd, "442 " + args[0] + " :You're not on that channel");
 						return;
@@ -223,7 +224,7 @@ void Server::handleKick(int fd, std::vector<std::string> args)
 	if (this->search_channels(newarg))
 	{
 		Channel *chan = getChannelByName(newarg);
-		if (!chan->isUserInChannel(client->getFd()))
+		if (!chan->isSearchBynickName(client->getNickname()))
 		{
 			sendToClient(fd, "442 " + args[0] + " :You're not on that channel");
 			return;
@@ -239,7 +240,7 @@ void Server::handleKick(int fd, std::vector<std::string> args)
 			sendToClient(fd, "401 " + args[1] + " :No such nick/channel");
 			return;
 		}
-		if (!chan->isUserInChannel(kickuser->getFd()))
+		if (!chan->isSearchBynickName(kickuser->getNickname()))
 		{
 			sendToClient(fd, "441 " + args[1] + " " + args[0] + " :They aren't on that channel");
 			return;
@@ -275,7 +276,7 @@ void Server::handleInvite(int fd, std::vector<std::string> args)
 		return;
 	}
 	Channel *chan = getChannelByName(newarg);
-	if (!chan->isUserInChannel(client->getFd()))
+	if (!chan->isSearchBynickName(client->getNickname()))
 	{
 		sendToClient(fd, "442 " + newarg + " :You're not on that channel");
 		return;
@@ -291,7 +292,7 @@ void Server::handleInvite(int fd, std::vector<std::string> args)
 		sendToClient(fd, "401 " + args[0] + " :No such nick/channel");
 		return;
 	}
-	if (chan->isUserInChannel(invited->getFd()))
+	if (chan->isSearchBynickName(client->getNickname()))
 	{
 		sendToClient(fd, "443 " + args[0] + " " + newarg + " :is already on channel");
 		return;
@@ -320,7 +321,7 @@ void Server::handleTopic(int fd, std::vector<std::string> args)
 		sendToClient(fd, "403 " + newarg + " :No such channel");
 		return;
 	}
-	if (!channel->isUserInChannel(client->getFd()))
+	if (!channel->isSearchBynickName(client->getNickname()))
 	{
 		sendToClient(fd, "442 " + newarg + " :You're not on that channel");
 		return;
@@ -399,7 +400,7 @@ void    Server::handleMode( int fd , std::vector<std::string> args)
 	if (!channel)
 		return;
 	
-	if (!channel->isUserInChannel(client->getFd()))
+	if (!channel->isSearchBynickName(client->getNickname()))
 	{
 		sendToClient(fd, "442 " + newarg + " :You're not on that channel");
 		return;
@@ -504,7 +505,7 @@ void    Server::handleMode( int fd , std::vector<std::string> args)
 				paramIndex++;
 				continue;
 			}
-			if (!channel->isUserInChannel(targetUser->getFd()))
+			if (!channel->isSearchBynickName(client->getNickname()))
 			{
 				sendToClient(fd, "441 " + args[paramIndex] + " " + newarg + " :They aren't on that channel");
 				paramIndex++;
@@ -575,4 +576,16 @@ void    Server::handleMode( int fd , std::vector<std::string> args)
 			sendToClient(it->first, ":" + client->getNickname() + " MODE " + newarg + " " + appliedModes + modeParams);
 		}
 	}
+}
+
+
+void    Server::handlequite( int fd , std::vector<std::string> args)
+{
+	Client *client = getClientByFd(fd);
+	(void) client;
+	for (size_t i = 0; i < args.size(); i++)
+	{
+		std::cout << args[i] << "lalal" << std::endl;
+	}
+	
 }

@@ -24,6 +24,15 @@ public:
     std::string getpassword(){ return this->password;};
     void addUser(int fd, std::string nickname){ this->users[fd] = nickname;};
     bool isUserInChannel(int fd){return users.find(fd) != users.end();};
+    bool isSearchBynickName(std::string nick)
+    {
+        for (std::map<int, std::string>::iterator it = users.begin(); it != users.end(); ++it)
+        {
+            if(nick == it->second)
+                return true;
+        }
+        return false;
+    }
     void addOperator(int fd){this->operators.insert(fd);};
     size_t SizeGetOperator(){return this->operators.size();};
     void addInvited_user(int fd){this->invited_users.insert(fd);};
@@ -76,6 +85,7 @@ public:
             return "";
         return modes;
     }
+    // void removeUser()
 };
 
 
