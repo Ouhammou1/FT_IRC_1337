@@ -10,6 +10,8 @@
 #include <sstream>
 #include <ctime>
 #include <arpa/inet.h>
+#include <cstdio>
+#include <cstring>
 #include "Channel.hpp"
 
 #define GREEN "\033[32m"
@@ -95,6 +97,7 @@ public:
     void    handleInvite( int fd , std::vector<std::string> args);
     void    handleTopic( int fd , std::vector<std::string> args);
     void    handleMode( int fd , std::vector<std::string> args);
+    void    handlequite( int fd , std::vector<std::string> args);
     void    sendNamesList(int fd, Channel *channel);
     void    lowrStr(std::string &str);
 

@@ -7,12 +7,9 @@ bool Server::search_channels(std::string name)
 	{
 		if(this->channels[i].getnimo() == name)
 		{
-			// std::cout << RED << "channel name: " << this->channels[i].getnimo() << std:: endl;
-			// std::cout << RED << "compare name: " << name << std:: endl;
 			return true;
 		}
 	}
-	
 	return false;
 }
 
@@ -25,8 +22,6 @@ void        Server::handleJoin( int fd , std::vector<std::string> args)
 		sendToClient(fd, "476 " + args[0] + " :Bad Channel Mask");
 		return;
 	}
-	// std::cout << RED << "ARG[0]"+args[0] << RESET << std::endl;
-	// std::transform(args[0].begin(), args[0].end(), args[0].begin(), ::tolower);
 	lowrStr(args[0]);
 	if (args.size() > 1 && args[1].find(' ') != std::string::npos)
 	{
@@ -53,7 +48,7 @@ void        Server::handleJoin( int fd , std::vector<std::string> args)
 	{
 		if (this->channels[i].getnimo() == args[0])
 		{
-			if (!this->channels[i].isUserInChannel(client->getFd()))
+			if (!this->channels[i].isSearchBynickName(client->getNickname()))
 			{
 				if (this->channels[i].getLimit() > 0 && this->channels[i].getUsersFds().size() >= static_cast<size_t>(this->channels[i].getLimit()))
                 {
@@ -131,13 +126,12 @@ int serachClientsByNickname(std::vector<Client> &clients, std::string nickname)
 
 void        Server::handlePrivmsg( int fd , std::vector<std::string> args)
 {
-	// std::cout << BLUE << getCurrentTime() << " Client " << fd << " SSSSSSSSS: " << std::endl; 
+	Client *clien = getClientByFd(fd);
 	if(args.size() < 2 || args[0].empty() || args[1].empty())
 	{
 		sendToClient(fd, "461 PRIVMSG :Not enough parameters");
 		return;
 	}
-	// std::transform(args[0].begin(), args[0].end(), args[0].begin(), ::tolower);
 	lowrStr(args[0]);
 	std::cout << BLUE << "arg[0] ="+args[0] << RESET << std::endl;
 	if (args[0][0] == '#')
@@ -150,7 +144,7 @@ void        Server::handlePrivmsg( int fd , std::vector<std::string> args)
 				if (this->channels[i].getnimo() == args[0])
 				{
 					channelFound = true;
-					if (!this->channels[i].isUserInChannel(fd))
+					if (!this->channels[i].isSearchBynickName(clien->getNickname()))
 					{
 						sendToClient(fd, "442 " + args[0] + " :You're not on that channel");
 						return;
@@ -190,12 +184,6 @@ void        Server::handlePrivmsg( int fd , std::vector<std::string> args)
 	
 	Client *client = getClientByFd(fd);
 	sendToClient(fd , ":" + GetName() + " 1337 " + client->getNickname() + " :privmsg cmd it recived");
-	// (void)args;
-	// for (size_t i = 0; i < args.size(); i++)
-	// {
-	//     std::cout << "args[" << i << "] = " << args[i] << std::endl;
-	// }
-	
 }
 
 Channel*    Server::getChannelByName(std::string name)
@@ -229,8 +217,6 @@ void Server::handleKick(int fd, std::vector<std::string> args)
 		sendToClient(fd, "461 " + client->getNickname() + " KICK :Not enough parameters");
 		return;
 	}
-	// std::cout << BLUE << "ARGS[1]*" + args[0] << RESET << std::endl;
-	// std::transform(args[0].begin(), args[0].end(), args[0].begin(), ::tolower);
 	lowrStr(args[0]);
 	std::string newarg = args[0];
 	if (args[0][0] != '#')
@@ -238,7 +224,7 @@ void Server::handleKick(int fd, std::vector<std::string> args)
 	if (this->search_channels(newarg))
 	{
 		Channel *chan = getChannelByName(newarg);
-		if (!chan->isUserInChannel(client->getFd()))
+		if (!chan->isSearchBynickName(client->getNickname()))
 		{
 			sendToClient(fd, "442 " + args[0] + " :You're not on that channel");
 			return;
@@ -254,7 +240,7 @@ void Server::handleKick(int fd, std::vector<std::string> args)
 			sendToClient(fd, "401 " + args[1] + " :No such nick/channel");
 			return;
 		}
-		if (!chan->isUserInChannel(kickuser->getFd()))
+		if (!chan->isSearchBynickName(kickuser->getNickname()))
 		{
 			sendToClient(fd, "441 " + args[1] + " " + args[0] + " :They aren't on that channel");
 			return;
@@ -280,7 +266,6 @@ void Server::handleInvite(int fd, std::vector<std::string> args)
 		sendToClient(fd, "461 " + client->getNickname() + " INVITE :Not enough parameters");
 		return;
 	}
-	// std::transform(args[1].begin(), args[1].end(), args[1].begin(), ::tolower);
 	lowrStr(args[1]);
 	std::string newarg = args[1];
 	if (args[1][0] != '#')
@@ -291,7 +276,7 @@ void Server::handleInvite(int fd, std::vector<std::string> args)
 		return;
 	}
 	Channel *chan = getChannelByName(newarg);
-	if (!chan->isUserInChannel(client->getFd()))
+	if (!chan->isSearchBynickName(client->getNickname()))
 	{
 		sendToClient(fd, "442 " + newarg + " :You're not on that channel");
 		return;
@@ -307,7 +292,7 @@ void Server::handleInvite(int fd, std::vector<std::string> args)
 		sendToClient(fd, "401 " + args[0] + " :No such nick/channel");
 		return;
 	}
-	if (chan->isUserInChannel(invited->getFd()))
+	if (chan->isSearchBynickName(client->getNickname()))
 	{
 		sendToClient(fd, "443 " + args[0] + " " + newarg + " :is already on channel");
 		return;
@@ -323,13 +308,10 @@ void Server::handleTopic(int fd, std::vector<std::string> args)
 	Client *client = getClientByFd(fd);
 	if (args.empty() || args.size() == 0)
 	{
-		// std::cout << "thinnnnnnnnnnnk" << std::endl;
 		sendToClient(fd, "461 " + client->getNickname() + " TOPIC :Not enough parameters");
 		return;
 	}
-	// std::cout << "th20202020022020" << std::endl;
 	lowrStr(args[0]);
-	// std::transform(args[0].begin(), args[0].end(), args[0].begin(), ::tolower);
 	std::string newarg = args[0];
 	if (args[0][0] != '#')
 		newarg = '#' + args[0];
@@ -339,7 +321,7 @@ void Server::handleTopic(int fd, std::vector<std::string> args)
 		sendToClient(fd, "403 " + newarg + " :No such channel");
 		return;
 	}
-	if (!channel->isUserInChannel(client->getFd()))
+	if (!channel->isSearchBynickName(client->getNickname()))
 	{
 		sendToClient(fd, "442 " + newarg + " :You're not on that channel");
 		return;
@@ -391,11 +373,6 @@ void Server::sendNamesList(int fd, Channel *channel)
 	sendToClient(fd, ":" + GetName() + " 366 " + client->getNickname() + " " + channel->getnimo() + " :End of /NAMES list");
 }
 
-// char lowerSafe(char c)
-// {
-// 	return std::tolower(static_cast<unsigned char>(c));
-// }
-
 void Server::lowrStr(std::string &str)
 {
 	for (size_t i = 0; i < str.size(); i++)
@@ -408,7 +385,6 @@ void    Server::handleMode( int fd , std::vector<std::string> args)
 {
 	Client *client = getClientByFd(fd);
 	lowrStr(args[0]);
-	// std::transform(args[0].begin(), args[0].end(), args[0].begin(), ::tolower);
 	std::cout << RED << "args[0]="+args[0] << std::endl;
 	std::string newarg = args[0];
 	if (args[0][0] != '#')
@@ -424,7 +400,7 @@ void    Server::handleMode( int fd , std::vector<std::string> args)
 	if (!channel)
 		return;
 	
-	if (!channel->isUserInChannel(client->getFd()))
+	if (!channel->isSearchBynickName(client->getNickname()))
 	{
 		sendToClient(fd, "442 " + newarg + " :You're not on that channel");
 		return;
@@ -452,8 +428,6 @@ void    Server::handleMode( int fd , std::vector<std::string> args)
 		sendToClient(fd, "461 " + client->getNickname() + " MODE :Not enough parameters");
 		return;
 	}
-	// std::cout << GREEN << "AAAA="+args[1] << std::endl;
-	// std::cout << RED << "AAAA=" << args[1].size() << std::endl;
 	for (size_t i = 0; i < mode.size(); i++)
 	{
 		char m = mode[i];
@@ -531,7 +505,7 @@ void    Server::handleMode( int fd , std::vector<std::string> args)
 				paramIndex++;
 				continue;
 			}
-			if (!channel->isUserInChannel(targetUser->getFd()))
+			if (!channel->isSearchBynickName(client->getNickname()))
 			{
 				sendToClient(fd, "441 " + args[paramIndex] + " " + newarg + " :They aren't on that channel");
 				paramIndex++;
@@ -602,4 +576,16 @@ void    Server::handleMode( int fd , std::vector<std::string> args)
 			sendToClient(it->first, ":" + client->getNickname() + " MODE " + newarg + " " + appliedModes + modeParams);
 		}
 	}
+}
+
+
+void    Server::handlequite( int fd , std::vector<std::string> args)
+{
+	Client *client = getClientByFd(fd);
+	(void) client;
+	for (size_t i = 0; i < args.size(); i++)
+	{
+		std::cout << args[i] << "lalal" << std::endl;
+	}
+	
 }

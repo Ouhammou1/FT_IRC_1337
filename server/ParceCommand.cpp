@@ -2,6 +2,14 @@
 #include "Channel.hpp"
 #include "../chatbot/Chatbot.hpp"
 
+void    toupperStr(std::string &cmd)
+{
+    for (size_t i = 0; i < cmd.size(); i++)
+	{
+		cmd[i] = std::toupper(static_cast<unsigned char>(cmd[i]));
+	}	
+}
+
 void     Server::ParseMessage(int clientFd ,std::string  msg)
 {
     if(msg.empty())
@@ -33,15 +41,12 @@ void     Server::ParseMessage(int clientFd ,std::string  msg)
     
 
     std::string cmd = parts[0];
-    std::transform(cmd.begin() , cmd.end() , cmd.begin() , ::toupper);
+    toupperStr(cmd);
 
-    //lowrStr
     std::vector<std::string> parameters(parts.begin() + 1, parts.end());    
     HandleCommand(clientFd , cmd , parameters);
 
 }
-
-
 
 
 void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> args)
@@ -85,16 +90,10 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
         sendToClient(fd, " 451 " + client->getNickname() + " :You have not registered");
         return;
     }
-    std::cout << GREEN <<"antoine" << RESET << std::endl;
     if (args.size() > 1 && Chatbot::supervisor(fd, args[1], client->getNickname()))
         return;
-    std::cout << YELLOW <<"antoine" << RESET << std::endl;
     if(cmd == "JOIN")
-    {
-        std::cout << RED <<"antoine 1900" << RESET << std::endl;
         handleJoin(fd, args);
-        std::cout << GREEN <<"antoine1901" << RESET << std::endl;
-    }
     else if(cmd == "PRIVMSG")
         handlePrivmsg(fd, args);
     else if (cmd == "WHOIS")
@@ -107,7 +106,6 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
         handleTopic(fd, args);
     else if(cmd == "MODE")
         handleMode(fd, args);
-
     else
         cmdNotFound(fd, cmd);
 
