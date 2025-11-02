@@ -57,7 +57,7 @@ void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> arg
     if(client == NULL)
         return;
 
-    if(cmd == "CAP")
+    if(cmd == "CAP" || cmd == "WHO")
         return ;
     if (cmd == "PASS")
     {
