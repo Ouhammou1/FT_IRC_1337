@@ -39,6 +39,16 @@ void    Server::handleNick( int fd , std::vector<std::string> args)
         return;
     }
 
+    std::vector<Client> clients = getClients();
+    for (size_t i = 0; i < clients.size(); i++)
+    {
+        if(clients[i].getNickname() == args[0])
+        {
+            sendToClient(fd , ":" + GetName() + " " + client->getNickname() + " USER exists ");
+            return;
+        }
+    }
+
     client->setNickname(args[0]);
     client->setNick(true);
 }
@@ -75,16 +85,6 @@ void        Server::handleUser( int fd , std::vector<std::string> args)
     }
 
     std::string realname =realNmae(args);
-
-    std::vector<Client> clients = getClients();
-    for (size_t i = 0; i < clients.size(); i++)
-    {
-        if(clients[i].getUsername() == args[0])
-        {
-            sendToClient(fd , ":" + GetName() + " " + client->getNickname() + " USER exists ");
-            return;
-        }
-    }
     
     client->setUsername(args[0]);
     client->setRealname(realname);

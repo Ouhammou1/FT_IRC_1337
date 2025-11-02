@@ -1,5 +1,5 @@
 #include "Server.hpp"
-#include <ctype.h>
+#include <cstdlib>
 
 bool Server::search_channels(std::string name)
 {
@@ -385,7 +385,6 @@ void    Server::handleMode( int fd , std::vector<std::string> args)
 {
 	Client *client = getClientByFd(fd);
 	lowrStr(args[0]);
-	std::cout << RED << "args[0]="+args[0] << std::endl;
 	std::string newarg = args[0];
 	if (args[0][0] != '#')
 		newarg = '#' + args[0];
@@ -551,7 +550,7 @@ void    Server::handleMode( int fd , std::vector<std::string> args)
 			}
 			if(adding)
 			{
-				channel->setLimit(atoi(args[paramIndex].c_str())); 
+				channel->setLimit(std::atoi(args[paramIndex].c_str())); 
 				appliedModes += "+l";
 				modeParams += " " + args[paramIndex];
 				paramIndex++;
@@ -578,14 +577,3 @@ void    Server::handleMode( int fd , std::vector<std::string> args)
 	}
 }
 
-
-void    Server::handlequite( int fd , std::vector<std::string> args)
-{
-	Client *client = getClientByFd(fd);
-	(void) client;
-	for (size_t i = 0; i < args.size(); i++)
-	{
-		std::cout << args[i] << "lalal" << std::endl;
-	}
-	
-}

@@ -97,7 +97,6 @@ public:
     void    handleInvite( int fd , std::vector<std::string> args);
     void    handleTopic( int fd , std::vector<std::string> args);
     void    handleMode( int fd , std::vector<std::string> args);
-    void    handlequite( int fd , std::vector<std::string> args);
     void    sendNamesList(int fd, Channel *channel);
     void    lowrStr(std::string &str);
 
