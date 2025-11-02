@@ -2,6 +2,14 @@
 #include "Channel.hpp"
 #include "../chatbot/Chatbot.hpp"
 
+void    toupperStr(std::string &cmd)
+{
+    for (size_t i = 0; i < cmd.size(); i++)
+	{
+		cmd[i] = std::toupper(static_cast<unsigned char>(cmd[i]));
+	}	
+}
+
 void     Server::ParseMessage(int clientFd ,std::string  msg)
 {
     if(msg.empty())
@@ -33,15 +41,12 @@ void     Server::ParseMessage(int clientFd ,std::string  msg)
     
 
     std::string cmd = parts[0];
-    std::transform(cmd.begin() , cmd.end() , cmd.begin() , ::toupper);
+    toupperStr(cmd);
 
-    //lowrStr
     std::vector<std::string> parameters(parts.begin() + 1, parts.end());    
     HandleCommand(clientFd , cmd , parameters);
 
 }
-
-
 
 
 void Server::HandleCommand(int fd, std::string cmd, std::vector<std::string> args)
