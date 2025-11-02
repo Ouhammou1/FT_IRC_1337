@@ -1,5 +1,5 @@
 #include "Server.hpp"
-#include <ctype.h>
+#include <cstdlib>
 
 bool Server::search_channels(std::string name)
 {
@@ -577,7 +577,7 @@ void    Server::handleMode( int fd , std::vector<std::string> args)
 			}
 			if(adding)
 			{
-				channel->setLimit(atoi(args[paramIndex].c_str())); 
+				channel->setLimit(std::atoi(args[paramIndex].c_str())); 
 				appliedModes += "+l";
 				modeParams += " " + args[paramIndex];
 				paramIndex++;
