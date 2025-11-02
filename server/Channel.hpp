@@ -15,7 +15,7 @@ private:
     std::set<int> invited_users;
     bool topic_lock;
     bool Invite_only;
-    int user_limit;
+    int  user_limit;
 public:
     Channel(std::string nam):name(nam), topic_lock(false), Invite_only(false), user_limit(0){};
     std::string getnimo(){return this->name;};
@@ -76,7 +76,6 @@ public:
             return "";
         return modes;
     }
-    // void RemoveClient()
 };
 
 
