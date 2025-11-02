@@ -1,5 +1,4 @@
 #include "Server.hpp"
-// #include "Client.hpp"
 
 void    Server::CreateSocket()
 {
@@ -119,8 +118,8 @@ void    Server::ReceiveNewData(int clientFd)
         {
             std::string line  = clientBuffer.substr(0, pos);
             
-            if(!line.empty() && line.back() == '\r')
-                line.pop_back();
+            if(!line.empty() && line[line.size() -1] == '\r')
+                line.erase(line.size() -1);
             
             if(!line.empty())
                 ParseMessage(clientFd , line);
