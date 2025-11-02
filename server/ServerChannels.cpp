@@ -292,11 +292,6 @@ void Server::handleInvite(int fd, std::vector<std::string> args)
 		sendToClient(fd, "401 " + args[0] + " :No such nick/channel");
 		return;
 	}
-	if (chan->isSearchBynickName(client->getNickname()))
-	{
-		sendToClient(fd, "443 " + args[0] + " " + newarg + " :is already on channel");
-		return;
-	}
 	chan->addInvited_user(invited->getFd());
 	sendToClient(invited->getFd(), ":" + client->getNickname() + " INVITE " + args[0] + " :" + newarg);
 	sendToClient(fd, "341 " + client->getNickname() + " " + args[0] + " " + newarg);
