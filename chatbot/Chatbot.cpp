@@ -80,8 +80,12 @@ std::string calcul(int n1, int n2, int op)
         res = ft_itoi(n1 - n2);
         break;
     case '/':
+    {
+        if ( n2 == 0)
+            break;
         res = ft_itoi(n1 / n2);
         break;
+    }
     default:
         break;
     }
@@ -166,7 +170,6 @@ void Chatbot::calculator(int fd, std::string arg, const std::string &name)
     int i = 0;
     if ( arg.size() <= 6 || !op_form(str))
     {
-        std::cout << str <<std::endl;
         msg = ":bot PRIVMSG " + name + " :Bravo you overlap your IQ score \r\n";
         send(fd, msg.c_str(), msg.length(), 0);
         return;
