@@ -15,9 +15,8 @@ int    Server::GetFd()
     return fd;
 }
 
-void    Server::SetPort(std::string& str)
+void     Server::SetPort(std::string& str)
 {
-
     port = (std::atoi(str.c_str()));
     // std::cout << "Port " << port << std::endl;
 }
