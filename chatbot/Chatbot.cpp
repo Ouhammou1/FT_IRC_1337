@@ -253,8 +253,11 @@ void Chatbot::sendToDest(std::vector<std::string> args, Client dest, Client send
 {
     int destFd = dest.getFd();
     std::string targetName = args[0];
-    std::string message = args[1];
-
+    std::string message;
+    for (size_t i = 1 ; i < args.size(); i++)
+    {
+        message += args[i] + " ";
+    }
     std::string msg = ":" + sender.getNickname() + "!" + sender.getUsername() + "@localhost PRIVMSG " + targetName + " :" + message + "\r\n";
     send(destFd, msg.c_str(), msg.length(), 0);
 }
