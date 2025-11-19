@@ -209,12 +209,18 @@ This project is part of the 42 School curriculum.
 
 ---
 
-## 👤 Author
+## 👤 Authors
 
-**Youssef**
+This project was developed by a team of three talented developers:
 
-- GitHub: [@yourusername](https://github.com/yourusername)
-- 42 Intra: `your_login`
+**Youssef Souhail**
+- GitHub: [@Yu-joseph](https://github.com/Yu-joseph)
+
+**Brahim Ouhammou**
+- GitHub: [@Ouhammou1](https://github.com/Ouhammou1)
+
+**Ismail El Abbassi**
+- GitHub: [@ism417](https://github.com/ism417)
 
 ---
 
